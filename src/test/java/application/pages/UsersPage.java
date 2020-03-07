@@ -23,6 +23,7 @@ public class UsersPage extends BasePage{
 
     //locator for dynamic elements (cannot be received with using @FindBy) :
     By errorPopupLocator = By.id("__popup__2");
+    By usersCounterLocator = By.xpath("//*[@title=\"User list\"]/[]");
 
     public void initNewUserCreation() {
         driver.get("http://localhost:8080/users");
@@ -41,9 +42,13 @@ public class UsersPage extends BasePage{
 
     public String getPopupErrorMessage() {
         WebElement errorPopup = wait.until(ExpectedConditions.elementToBeClickable(errorPopupLocator));
-        String errorMessage = errorPopup.findElement(By.className("errorSeverity")).getText();
-        System.out.println(errorMessage);
-        return errorMessage;
+        return errorPopup.findElement(By.className("errorSeverity")).getText();
+    }
+
+    //fix later
+    public Integer getAllUsersCount() {
+        String count = driver.findElement(usersCounterLocator).getText();
+        return Integer.valueOf(driver.findElement(By.className("admin-menu-counter")).getText());
     }
 
 

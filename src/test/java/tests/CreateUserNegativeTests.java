@@ -3,6 +3,7 @@ package tests;
 import data.User;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class CreateUserNegativeTests extends BaseTest {
@@ -12,16 +13,26 @@ public class CreateUserNegativeTests extends BaseTest {
     private final String DIFF_PASSWORDS_MSG = "Password doesn't match!";
     private final String DUPLICATE_USERLOGIN_MSG = "Value should be unique: login";
 
+    @DataProvider
+    public Object[] provideCorrectUser() {
+        User user = new User();
+        user.setLogin("test-" + System.currentTimeMillis());
+        user.setPassword("test");
+        user.setRepeatPassword("test");
+        User[] users = {user};
+        return users;
+    }
+
     @BeforeClass
     public void login() {
         app.loginPage.login("root", "root");
     }
 
     //tests for not filled in mandatory fields
-    @Test
-    public void createNewUserWithoutLogin() {
+    @Test(dataProvider = "provideCorrectUser")
+    public void createNewUserWithoutLogin(User user) {
         app.usersPage.initNewUserCreation();
-        User user = generateUserWithoutLogin();
+        user.setLogin(null);
         app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.newUserForm.getErrorMessageOnMandatoryFields();
