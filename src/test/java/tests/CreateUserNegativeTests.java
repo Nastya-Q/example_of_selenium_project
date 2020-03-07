@@ -10,6 +10,7 @@ public class CreateUserNegativeTests extends BaseTest {
     private final String MISSING_PASSWORD_MSG = "Password is required!";
     private final String MISSING_LOGIN_MSG = "Login is required!";
     private final String DIFF_PASSWORDS_MSG = "Password doesn't match!";
+    private final String DUPLICATE_USERLOGIN_MSG = "Value should be unique: login";
 
     @BeforeClass
     public void login() {
@@ -66,9 +67,13 @@ public class CreateUserNegativeTests extends BaseTest {
         app.newUserForm.submitUserCreation();
         String userNameFromUserEditPage = app.usersPage.getUserNameFromEditPage();
         Assert.assertEquals(userNameFromUserEditPage, user.getLogin(), "user name doesn't match");
+        //repeat the same user creation
         app.usersPage.initNewUserCreation();
         app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.submitUserCreation();
+        String actualErrorMessage = app.usersPage.getPopupErrorMessage();
+        Assert.assertEquals(actualErrorMessage, DUPLICATE_USERLOGIN_MSG, "error message doesn't match!");
+
 
 
     }

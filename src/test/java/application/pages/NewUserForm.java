@@ -7,7 +7,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class NewUserForm extends BasePage {
@@ -42,7 +41,7 @@ public class NewUserForm extends BasePage {
     private WebElement cancelButton;
 
     //locator for dynamic elements (cannot be received with using @FindBy) :
-    By errorBulb = By.className("error-bulb2");
+    By errorBulbLocator = By.className("error-bulb2");
 
     public void fillInUserCreationForm(User user, Boolean forcePwdChange) {
         if (user.getLogin() != null) {
@@ -77,11 +76,10 @@ public class NewUserForm extends BasePage {
     }
 
     public String getErrorMessageOnMandatoryFields() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(errorBulb));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(errorBulbLocator));
         Actions action = new Actions(driver);
-        action.moveToElement(driver.findElement(errorBulb)).click().build().perform();
+        action.moveToElement(driver.findElement(errorBulbLocator)).click().build().perform();
         String errorMessage = driver.findElement(By.className("error-tooltip")).getText();
-        System.out.println(errorMessage);
         return errorMessage;
     }
 

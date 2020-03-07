@@ -21,6 +21,9 @@ public class UsersPage extends BasePage{
 //    @FindBy(id = "id_l.U.cr.createUserDialog")
 //    private WebElement createUserDialog;
 
+    //locator for dynamic elements (cannot be received with using @FindBy) :
+    By errorPopupLocator = By.id("__popup__2");
+
     public void initNewUserCreation() {
         driver.get("http://localhost:8080/users");
         createNewUserButton.click();
@@ -34,6 +37,13 @@ public class UsersPage extends BasePage{
         wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.E.AdminBreadcrumb.AdminBreadcrumb")));
         return driver.findElement(By.id("id_l.E.AdminBreadcrumb.AdminBreadcrumb"))
                 .findElement(By.cssSelector("li:nth-child(2)")).getText();
+    }
+
+    public String getPopupErrorMessage() {
+        WebElement errorPopup = wait.until(ExpectedConditions.elementToBeClickable(errorPopupLocator));
+        String errorMessage = errorPopup.findElement(By.className("errorSeverity")).getText();
+        System.out.println(errorMessage);
+        return errorMessage;
     }
 
 
