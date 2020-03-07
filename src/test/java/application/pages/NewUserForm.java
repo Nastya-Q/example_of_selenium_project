@@ -4,6 +4,7 @@ import data.User;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -40,18 +41,31 @@ public class NewUserForm extends BasePage {
     @FindBy(id = "id_l.U.cr.createUserCancel")
     private WebElement cancelButton;
 
-
+    //locator for dynamic elements (cannot be received with using @FindBy) :
+    By errorBulb = By.className("error-bulb2");
 
     public void fillInUserCreationForm(User user, Boolean forcePwdChange) {
-        loginField.sendKeys(user.getLogin());
-        passwordField.sendKeys(user.getPassword());
-        repeatPasswordField.sendKeys(user.getPassword());
+        if (user.getLogin() != null) {
+            loginField.sendKeys(user.getLogin());
+        }
+        if (user.getPassword() != null) {
+            passwordField.sendKeys(user.getPassword());
+        }
+        if (user.getRepeatPassword() != null) {
+            repeatPasswordField.sendKeys(user.getRepeatPassword());
+        }
         if (forcePwdChange) {
             forcePswdChangeCheckbox.click();
         }
-//        fullNameField.sendKeys(user.getFullName());
-//        emailField.sendKeys(user.getEmail());
-//        jabberField.sendKeys(user.getJabber());
+        if (user.getFullName() != null) {
+            fullNameField.sendKeys(user.getFullName());
+        }
+        if (user.getEmail() != null) {
+            emailField.sendKeys(user.getEmail());
+        }
+        if (user.getJabber() != null) {
+            jabberField.sendKeys(user.getJabber());
+        }
     }
 
     public void submitUserCreation() {
@@ -62,9 +76,12 @@ public class NewUserForm extends BasePage {
         cancelButton.click();
     }
 
-    public String getErrorMessage() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.className("error-bulb2")));
+    public String getErrorMessageOnMandatoryFields() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(errorBulb));
+        Actions action = new Actions(driver);
+        action.moveToElement(driver.findElement(errorBulb)).click().build().perform();
         String errorMessage = driver.findElement(By.className("error-tooltip")).getText();
+        System.out.println(errorMessage);
         return errorMessage;
     }
 

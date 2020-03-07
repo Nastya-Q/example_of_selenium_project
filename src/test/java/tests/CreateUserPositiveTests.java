@@ -19,7 +19,6 @@ public class CreateUserPositiveTests extends BaseTest{
         app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.submitUserCreation();
         String userNameFromUserEditPage = app.usersPage.getUserNameFromEditPage();
-        System.out.println(userNameFromUserEditPage);
         Assert.assertEquals(userNameFromUserEditPage, user.getLogin(), "user name doesn't match");
     }
 
@@ -27,6 +26,7 @@ public class CreateUserPositiveTests extends BaseTest{
         User user = new User();
         user.setLogin("test-" + System.currentTimeMillis());
         user.setPassword("test");
+        user.setRepeatPassword("test");
         return user;
     }
 }
