@@ -8,6 +8,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import java.util.List;
+
 public class UsersPage extends BasePage{
 
     public UsersPage(WebDriver driver) {
@@ -17,6 +19,10 @@ public class UsersPage extends BasePage{
 
     @FindBy(id = "id_l.U.createNewUser")
     private WebElement createNewUserButton;
+    @FindBy(id = "id_l.U.queryText")
+    private WebElement userSearchField;
+    @FindBy(id = "id_l.U.searchButton")
+    private WebElement userSearchButton;
 
 //    @FindBy(id = "id_l.U.cr.createUserDialog")
 //    private WebElement createUserDialog;
@@ -45,10 +51,34 @@ public class UsersPage extends BasePage{
         return errorPopup.findElement(By.className("errorSeverity")).getText();
     }
 
-    //fix later
+    //fix later to be able to get created users count from left menu
     public Integer getAllUsersCount() {
         String count = driver.findElement(usersCounterLocator).getText();
         return Integer.valueOf(driver.findElement(By.className("admin-menu-counter")).getText());
+    }
+
+    public User findCreatedUser(User user) {
+        driver.get("http://localhost:8080/users");
+        userSearchField.sendKeys(user.getLogin());
+        userSearchButton.click();
+        User foundUser = new User();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.usersList.usersList")));
+        WebElement userInfoRow = wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.usersList.usersList")))
+                .findElement(By.tagName("tbody")).findElement(By.tagName("tr"));
+        String foundUserLogin = userInfoRow.findElement(By.cssSelector("td:nth-child(1)")).getText();
+        String foundUserFullName = userInfoRow.findElement(By.cssSelector("td:nth-child(2)")).getText();
+        String foundUserEmail = userInfoRow.findElement(By.cssSelector("td:nth-child(3)")).findElement(By.xpath("div[1]")).getText();
+        //if there is second div with jabber
+        List<WebElement> emailAndJabber = userInfoRow.findElement(By.cssSelector("td:nth-child(3)")).findElements(By.tagName("div"));
+        if (!emailAndJabber.get(0).getText().equals("")) {
+            foundUser.setEmail(emailAndJabber.get(0).getText());
+        }
+        if (emailAndJabber.size() == 2) {
+            foundUser.setJabber(emailAndJabber.get(1).getText());
+        }
+        foundUser.setLogin(foundUserLogin);
+        foundUser.setFullName(foundUserFullName);
+        return foundUser;
     }
 
 

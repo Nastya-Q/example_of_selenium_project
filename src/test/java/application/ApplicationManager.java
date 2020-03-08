@@ -24,6 +24,6 @@ public class ApplicationManager {
     }
 
     public void quit() {
-//        driver.quit();
+        driver.quit();
     }
 }
