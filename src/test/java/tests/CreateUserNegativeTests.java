@@ -39,30 +39,31 @@ public class CreateUserNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, MISSING_LOGIN_MSG, "error message doesn't match!");
     }
 
-    @Test
-    public void createNewUserWithoutPassword() {
+    @Test(dataProvider = "provideCorrectUser")
+    public void createNewUserWithoutPassword(User user) {
         app.usersPage.initNewUserCreation();
-        User user = generateUserWithoutPassword();
+        user.setPassword(null);
+        user.setRepeatPassword(null);
         app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.newUserForm.getErrorMessageOnMandatoryFields();
         Assert.assertEquals(actualErrorMessage, MISSING_PASSWORD_MSG, "error message doesn't match!");
     }
 
-    @Test
-    public void createNewUserWithoutPasswordRepeat() {
+    @Test(dataProvider = "provideCorrectUser")
+    public void createNewUserWithoutPasswordRepeat(User user) {
         app.usersPage.initNewUserCreation();
-        User user =  generateUserWithoutConfirmedPwd();
+        user.setRepeatPassword(null);
         app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.newUserForm.getErrorMessageOnMandatoryFields();
         Assert.assertEquals(actualErrorMessage, DIFF_PASSWORDS_MSG, "error message doesn't match!");
     }
 
-    @Test
-    public void createNewUserWithDiffPasswords() {
+    @Test(dataProvider = "provideCorrectUser")
+    public void createNewUserWithDiffPasswords(User user) {
         app.usersPage.initNewUserCreation();
-        User user =  generateUserWithNotMatchingPwd();
+        user.setRepeatPassword(user.getPassword()+"diff");
         app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.newUserForm.getErrorMessageOnMandatoryFields();
@@ -70,10 +71,9 @@ public class CreateUserNegativeTests extends BaseTest {
     }
 
     //duplicated user name
-    @Test
-    public void createDuplicatedUser() {
+    @Test(dataProvider = "provideCorrectUser")
+    public void createDuplicatedUser(User user) {
         app.usersPage.initNewUserCreation();
-        User user = generateCorrectUser();
         app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.submitUserCreation();
         String userNameFromUserEditPage = app.usersPage.getUserNameFromEditPage();
@@ -84,45 +84,7 @@ public class CreateUserNegativeTests extends BaseTest {
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.usersPage.getPopupErrorMessage();
         Assert.assertEquals(actualErrorMessage, DUPLICATE_USERLOGIN_MSG, "error message doesn't match!");
-
-
-
-    }
-    private User generateCorrectUser() {
-        User user = new User();
-        user.setLogin("test-" + System.currentTimeMillis());
-        user.setPassword("test");
-        user.setRepeatPassword("test");
-        return user;
     }
 
-
-    private User generateUserWithoutPassword() {
-        User user = new User();
-        user.setLogin("test-" + System.currentTimeMillis());
-        return user;
-    }
-
-    private User generateUserWithoutLogin() {
-        User user = new User();
-        user.setPassword("test");
-        user.setRepeatPassword("test");
-        return user;
-    }
-
-    private User generateUserWithNotMatchingPwd() {
-        User user = new User();
-        user.setLogin("test-" + System.currentTimeMillis());
-        user.setPassword("test");
-        user.setRepeatPassword("test1");
-        return user;
-    }
-
-    private User generateUserWithoutConfirmedPwd() {
-        User user = new User();
-        user.setLogin("test-" + System.currentTimeMillis());
-        user.setPassword("test");
-        return user;
-    }
 
 }
