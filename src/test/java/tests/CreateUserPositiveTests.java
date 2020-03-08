@@ -77,14 +77,6 @@ public class CreateUserPositiveTests extends BaseTest {
         createdUsers.add(user);
     }
 
-    @Test (dependsOnMethods = {"createNewUser"})
-    public void createdUserCanLogin() {
-        for (User user: createdUsers) {
-            System.out.println(user.getLogin());
-            app.loginPage.login(user.getLogin(), user.getPassword());
-        }
-    }
-
 //    @Test
 //    public void cancelCreateUser() {
 //

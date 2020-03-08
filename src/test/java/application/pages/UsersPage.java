@@ -1,7 +1,6 @@
 package application.pages;
 
 import data.User;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -25,12 +24,18 @@ public class UsersPage extends BasePage{
     @FindBy(id = "id_l.U.searchButton")
     private WebElement userSearchButton;
 
-//    @FindBy(id = "id_l.U.cr.createUserDialog")
-//    private WebElement createUserDialog;
+    //locator for dynamic elements (cannot be received with using @FindBy):
+    private By errorPopupLocator = By.id("__popup__2");
+    private By usersCounterLocator = By.xpath("//*[@title='User list']/[]");
+    //user list locators:
+    private By usersListLocator = By.id("id_l.U.usersList.usersList");
+    private By userInfoRowLocator =  By.xpath("//div[@id='id_l.U.usersList.usersList']//tbody/tr");
+    private By userLoginNameCellLocator = By.xpath("//div[@id='id_l.U.usersList.usersList']//tbody/tr[1]/td[1]");
+    private By userFullNameCellLocator = By.xpath("//div[@id='id_l.U.usersList.usersList']//tbody/tr[1]/td[2]");
+    private By userEmailAndJabberCellLocator = By.xpath("//div[@id='id_l.U.usersList.usersList']//tbody/tr[1]/td[3]/div");
+    private By userEmailLocator = By.xpath("//div[@id='id_l.U.usersList.usersList']//tbody/tr[1]/td[3]/div[1]");
+    private By userJabberLocator = By.xpath("//div[@id='id_l.U.usersList.usersList']//tbody/tr[1]/td[3]/div[2]");
 
-    //locator for dynamic elements (cannot be received with using @FindBy) :
-    By errorPopupLocator = By.id("__popup__2");
-    By usersCounterLocator = By.xpath("//*[@title=\"User list\"]/[]");
 
     public void initNewUserCreation() {
         driver.get("http://localhost:8080/users");
@@ -59,31 +64,28 @@ public class UsersPage extends BasePage{
     }
 
     public User getCreatedUserInfo(User user) {
-        driver.get("http://localhost:8080/users");
+        openUsersPage();
         userSearchField.sendKeys(user.getLogin());
         userSearchButton.click();
-        User foundUser = new User();
         wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.usersList.usersList")));
-        WebElement userInfoRow = wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.usersList.usersList")))
-                .findElement(By.tagName("tbody")).findElement(By.tagName("tr"));
-        String foundUserLogin = userInfoRow.findElement(By.cssSelector("td:nth-child(1)")).getText();
-        String foundUserFullName = userInfoRow.findElement(By.cssSelector("td:nth-child(2)")).getText();
-        String foundUserEmail = userInfoRow.findElement(By.cssSelector("td:nth-child(3)")).findElement(By.xpath("div[1]")).getText();
-        //if there is second div with jabber
-        List<WebElement> emailAndJabber = userInfoRow.findElement(By.cssSelector("td:nth-child(3)")).findElements(By.tagName("div"));
+        User foundUser = new User();
+        wait.until(ExpectedConditions.elementToBeClickable(userInfoRowLocator));
+        foundUser.setLogin(driver.findElement(userLoginNameCellLocator).getText());
+        foundUser.setFullName(driver.findElement(userFullNameCellLocator).getText());
+        List<WebElement> emailAndJabber = driver.findElements(userEmailAndJabberCellLocator);
+        //if email not empty
         if (!emailAndJabber.get(0).getText().equals("")) {
-            foundUser.setEmail(emailAndJabber.get(0).getText());
+            foundUser.setEmail(driver.findElement(userEmailLocator).getText());
         }
+        //if jabber not empty
         if (emailAndJabber.size() == 2) {
-            foundUser.setJabber(emailAndJabber.get(1).getText());
+            foundUser.setEmail(driver.findElement(userJabberLocator).getText());
         }
-        foundUser.setLogin(foundUserLogin);
-        foundUser.setFullName(foundUserFullName);
         return foundUser;
     }
 
     public Boolean isUserCreated(User user) {
-        driver.get("http://localhost:8080/users");
+        openUsersPage();
         userSearchField.sendKeys(user.getLogin());
         userSearchButton.click();
         wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.usersList.usersList")));
@@ -97,7 +99,7 @@ public class UsersPage extends BasePage{
     }
 
     public void deleteUser(User user) {
-        driver.get("http://localhost:8080/users");
+        openUsersPage();
         userSearchField.sendKeys(user.getLogin());
         userSearchButton.click();
         wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.usersList.usersList")));
@@ -105,6 +107,10 @@ public class UsersPage extends BasePage{
                 .findElement(By.tagName("tbody")).findElement(By.tagName("tr"));
         userInfoRow.findElement(By.cssSelector("td:nth-child(6)")).findElement(By.cssSelector("a:nth-child(1)")).click();
         driver.switchTo().alert().accept();
+    }
+
+    private void openUsersPage() {
+        driver.get("http://localhost:8080/users");
     }
 
 
