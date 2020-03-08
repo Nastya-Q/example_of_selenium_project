@@ -1,6 +1,7 @@
 package application.pages;
 
 import data.User;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -79,6 +80,18 @@ public class UsersPage extends BasePage{
         foundUser.setLogin(foundUserLogin);
         foundUser.setFullName(foundUserFullName);
         return foundUser;
+    }
+
+    public void deleteUser(User user) {
+        driver.get("http://localhost:8080/users");
+        userSearchField.sendKeys(user.getLogin());
+        userSearchButton.click();
+        //*[@id="id_l.U.usersList.usersList"]/table/tbody/tr[1]/td[6]
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.usersList.usersList")));
+        WebElement userInfoRow = wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.usersList.usersList")))
+                .findElement(By.tagName("tbody")).findElement(By.tagName("tr"));
+        userInfoRow.findElement(By.cssSelector("td:nth-child(6)")).findElement(By.cssSelector("a:nth-child(1)")).click();
+        driver.switchTo().alert().accept();
     }
 
 

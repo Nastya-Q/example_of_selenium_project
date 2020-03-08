@@ -2,6 +2,7 @@ package tests;
 
 import data.User;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -69,6 +70,13 @@ public class CreateUserPositiveTests extends BaseTest {
             user.setFullName(user.getLogin()); //if user full name is not defined, login name is shown instead in full name section
         }
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
+    }
+
+    @AfterMethod
+    // delete test user after each creation
+    public void teardown(Object[] parameters) {
+        User user = (User) parameters[0];
+        app.usersPage.deleteUser(user);
     }
 
 }
