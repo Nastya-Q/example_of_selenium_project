@@ -70,6 +70,7 @@ public class CreateUserNegativeTests extends BaseTest {
     }
 
     //duplicated user name
+    //todo: optimize
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createDuplicatedUser(User user) {
         app.usersPage.initNewUserCreation();
@@ -83,6 +84,11 @@ public class CreateUserNegativeTests extends BaseTest {
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.usersPage.getPopupErrorMessage();
         Assert.assertEquals(actualErrorMessage, DUPLICATE_USERLOGIN_MSG, "error message doesn't match!");
+    }
+
+    @Test
+    public void userWithRestrictedSymbols() {
+
     }
 
 

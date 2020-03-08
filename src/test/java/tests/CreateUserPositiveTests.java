@@ -6,13 +6,14 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CreateUserPositiveTests extends BaseTest {
+
+    private List<User> createdUsers;
 
     @BeforeClass
     public void login() {
@@ -65,18 +66,36 @@ public class CreateUserPositiveTests extends BaseTest {
             Assert.assertEquals(userNameFromUserEditPage, user.getLogin(), "user name doesn't match");
         }
         // find created used and check user info in the users list (login, full name, email/jabber)
-        User createdUserInfo = app.usersPage.findCreatedUser(user);
+        Assert.assertTrue(app.usersPage.isUserCreated(user));
+        User createdUserInfo = app.usersPage.getCreatedUserInfo(user);
         if (user.getFullName() == null) {
             user.setFullName(user.getLogin()); //if user full name is not defined, login name is shown instead in full name section
         }
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
+        //prepare created users list for next login test
+        createdUsers= new ArrayList<User>();
+        createdUsers.add(user);
     }
 
-    @AfterMethod
-    // delete test user after each creation
-    public void teardown(Object[] parameters) {
-        User user = (User) parameters[0];
-        app.usersPage.deleteUser(user);
+    @Test (dependsOnMethods = {"createNewUser"})
+    public void createdUserCanLogin() {
+        for (User user: createdUsers) {
+            System.out.println(user.getLogin());
+            app.loginPage.login(user.getLogin(), user.getPassword());
+        }
     }
+
+//    @Test
+//    public void cancelCreateUser() {
+//
+//    }
+
+
+//    @AfterMethod
+//    // delete test user after each creation
+//    public void teardown(Object[] parameters) {
+//        User user = (User) parameters[0];
+//        app.usersPage.deleteUser(user);
+//    }
 
 }

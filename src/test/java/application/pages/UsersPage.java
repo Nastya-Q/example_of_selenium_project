@@ -52,13 +52,13 @@ public class UsersPage extends BasePage{
         return errorPopup.findElement(By.className("errorSeverity")).getText();
     }
 
-    //fix later to be able to get created users count from left menu
+    //todo: fix later to be able to get created users count from left menu
     public Integer getAllUsersCount() {
         String count = driver.findElement(usersCounterLocator).getText();
         return Integer.valueOf(driver.findElement(By.className("admin-menu-counter")).getText());
     }
 
-    public User findCreatedUser(User user) {
+    public User getCreatedUserInfo(User user) {
         driver.get("http://localhost:8080/users");
         userSearchField.sendKeys(user.getLogin());
         userSearchButton.click();
@@ -82,11 +82,24 @@ public class UsersPage extends BasePage{
         return foundUser;
     }
 
+    public Boolean isUserCreated(User user) {
+        driver.get("http://localhost:8080/users");
+        userSearchField.sendKeys(user.getLogin());
+        userSearchButton.click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.usersList.usersList")));
+        List<WebElement> userInfoRows = wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.usersList.usersList")))
+                .findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+        if (userInfoRows.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void deleteUser(User user) {
         driver.get("http://localhost:8080/users");
         userSearchField.sendKeys(user.getLogin());
         userSearchButton.click();
-        //*[@id="id_l.U.usersList.usersList"]/table/tbody/tr[1]/td[6]
         wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.usersList.usersList")));
         WebElement userInfoRow = wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.usersList.usersList")))
                 .findElement(By.tagName("tbody")).findElement(By.tagName("tr"));
