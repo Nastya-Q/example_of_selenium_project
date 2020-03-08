@@ -7,6 +7,10 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class CreateUserNegativeTests extends BaseTest {
+    @BeforeClass
+    public void login() {
+        app.loginPage.login("root", "root");
+    }
     //expected error messages on user creation form
     private final String MISSING_PASSWORD_MSG = "Password is required!";
     private final String MISSING_LOGIN_MSG = "Login is required!";
@@ -14,22 +18,17 @@ public class CreateUserNegativeTests extends BaseTest {
     private final String DUPLICATE_USERLOGIN_MSG = "Value should be unique: login";
 
     @DataProvider
-    public Object[] provideCorrectUser() {
+    public Object[] provideUserWithMandatoryFields() {
         User user = new User();
-        user.setLogin("test-" + System.currentTimeMillis());
+        user.setLogin(String.format("test%s", System.currentTimeMillis()));
         user.setPassword("test");
         user.setRepeatPassword("test");
         User[] users = {user};
         return users;
     }
 
-    @BeforeClass
-    public void login() {
-        app.loginPage.login("root", "root");
-    }
-
     //tests for not filled in mandatory fields
-    @Test(dataProvider = "provideCorrectUser")
+    @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithoutLogin(User user) {
         app.usersPage.initNewUserCreation();
         user.setLogin(null);
@@ -39,7 +38,7 @@ public class CreateUserNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, MISSING_LOGIN_MSG, "error message doesn't match!");
     }
 
-    @Test(dataProvider = "provideCorrectUser")
+    @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithoutPassword(User user) {
         app.usersPage.initNewUserCreation();
         user.setPassword(null);
@@ -50,7 +49,7 @@ public class CreateUserNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, MISSING_PASSWORD_MSG, "error message doesn't match!");
     }
 
-    @Test(dataProvider = "provideCorrectUser")
+    @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithoutPasswordRepeat(User user) {
         app.usersPage.initNewUserCreation();
         user.setRepeatPassword(null);
@@ -60,7 +59,7 @@ public class CreateUserNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, DIFF_PASSWORDS_MSG, "error message doesn't match!");
     }
 
-    @Test(dataProvider = "provideCorrectUser")
+    @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithDiffPasswords(User user) {
         app.usersPage.initNewUserCreation();
         user.setRepeatPassword(user.getPassword()+"diff");
@@ -71,7 +70,7 @@ public class CreateUserNegativeTests extends BaseTest {
     }
 
     //duplicated user name
-    @Test(dataProvider = "provideCorrectUser")
+    @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createDuplicatedUser(User user) {
         app.usersPage.initNewUserCreation();
         app.newUserForm.fillInUserCreationForm(user, false);
