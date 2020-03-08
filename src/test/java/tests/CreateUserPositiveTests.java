@@ -69,8 +69,8 @@ public class CreateUserPositiveTests extends BaseTest {
         Assert.assertTrue(app.usersPage.isUserCreated(user));
         User createdUserInfo = app.usersPage.getCreatedUserInfo(user);
         if (user.getFullName() == null) {
-            user.setFullName(user.getLogin()); //if user full name is not defined, login name is shown instead in full name section
-        }
+            user.setFullName(user.getLogin()); //if user full name is not defined, then in full name section login name is shown instead
+    }
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
         //prepare created users list for next login test
         createdUsers= new ArrayList<User>();
@@ -83,11 +83,11 @@ public class CreateUserPositiveTests extends BaseTest {
 //    }
 
 
-//    @AfterMethod
-//    // delete test user after each creation
-//    public void teardown(Object[] parameters) {
-//        User user = (User) parameters[0];
-//        app.usersPage.deleteUser(user);
-//    }
+    @AfterMethod
+    // delete test user after each creation
+    public void teardown(Object[] parameters) {
+        User user = (User) parameters[0];
+        app.usersPage.deleteUser(user);
+    }
 
 }
