@@ -23,7 +23,6 @@ public class NewUserForm extends BasePage {
     private WebElement passwordField;
     @FindBy(id = "id_l.U.cr.confirmPassword")
     private WebElement repeatPasswordField;
-
     //optional fields/checkbox
     @FindBy(id = "id_l.U.cr.forcePasswordChange")
     private WebElement forcePswdChangeCheckbox;
@@ -33,7 +32,6 @@ public class NewUserForm extends BasePage {
     private WebElement emailField;
     @FindBy(id = "id_l.U.cr.jabber")
     private WebElement jabberField;
-
     //buttons
     @FindBy(id = "id_l.U.cr.createUserOk")
     private WebElement submitButon;
@@ -42,6 +40,7 @@ public class NewUserForm extends BasePage {
 
     //locator for dynamic elements (cannot be received with using @FindBy) :
     By errorBulbLocator = By.className("error-bulb2");
+    By errorHintLocator = By.className("error-tooltip");
 
     public void fillInUserCreationForm(User user, Boolean forcePwdChange) {
         if (user.getLogin() != null) {
@@ -79,7 +78,7 @@ public class NewUserForm extends BasePage {
         wait.until(ExpectedConditions.visibilityOfElementLocated(errorBulbLocator));
         Actions action = new Actions(driver);
         action.moveToElement(driver.findElement(errorBulbLocator)).click().build().perform();
-        String errorMessage = driver.findElement(By.className("error-tooltip")).getText();
+        String errorMessage = driver.findElement(errorHintLocator).getText();
         return errorMessage;
     }
 
