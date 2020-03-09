@@ -135,10 +135,16 @@ public class CreateUserNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, DUPLICATE_USERLOGIN_MSG, "error message doesn't match!");
     }
 
-    @Test
-    public void userWithRestrictedSymbols() {
-
+    @Test(dataProvider = "provideUserWithMandatoryFields")
+    //fill in the form and cancel the user creation:
+    public void cancelUserCreation(User user) {
+        app.usersPage.initNewUserCreation();
+        app.newUserForm.fillInUserCreationForm(user, false);
+        app.newUserForm.cancelUserCreation();
+        Assert.assertFalse(app.usersPage.isUserCreated(user));
     }
+
+
 
 
 }

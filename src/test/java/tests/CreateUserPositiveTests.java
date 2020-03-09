@@ -12,9 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CreateUserPositiveTests extends BaseTest {
-
-    private List<User> createdUsers;
-
     @BeforeClass
     public void login() {
         app.loginPage.login("root", "root");
@@ -72,16 +69,7 @@ public class CreateUserPositiveTests extends BaseTest {
             user.setFullName(user.getLogin()); //if user full name is not defined, then in full name section login name is shown instead
     }
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
-        //prepare created users list for next login test
-        createdUsers= new ArrayList<User>();
-        createdUsers.add(user);
     }
-
-//    @Test
-//    public void cancelCreateUser() {
-//
-//    }
-
 
     @AfterMethod
     // delete test user after each creation

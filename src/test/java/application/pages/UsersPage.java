@@ -65,9 +65,8 @@ public class UsersPage extends BasePage{
         openUsersPage();
         userSearchField.sendKeys(user.getLogin());
         userSearchButton.click();
-        //wait until user list table re-draws (to avoid stale element exception)
-        wait.until(ExpectedConditions.elementToBeClickable(usersListLocator));
-        wait.until(ExpectedConditions.elementToBeClickable(userInfoRowLocator));
+        //wait until user list table re-draws
+        wait.until(ExpectedConditions.stalenessOf(driver.findElement(usersListLocator)));
         User foundUser = new User();
         foundUser.setLogin(driver.findElement(userLoginNameCellLocator).getText());
         foundUser.setFullName(driver.findElement(userFullNameCellLocator).getText());
@@ -88,8 +87,7 @@ public class UsersPage extends BasePage{
         userSearchField.sendKeys(user.getLogin());
         userSearchButton.click();
         //wait until users table list re-loads
-        wait.until(ExpectedConditions.elementToBeClickable(usersListLocator));
-        wait.until(ExpectedConditions.elementToBeClickable(userInfoRowLocator));
+        wait.until(ExpectedConditions.stalenessOf(driver.findElement(usersListLocator)));
         List<WebElement> userInfoRows = driver.findElements(userInfoRowLocator);
         if (userInfoRows.size() > 0) {
             return true;
