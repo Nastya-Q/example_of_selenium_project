@@ -1,6 +1,7 @@
 package tests;
 
 import data.User;
+import data.UserGenerator;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -25,12 +26,9 @@ public class CreateUserNegativeTests extends BaseTest {
 
     @DataProvider
     public Object[] provideUserWithMandatoryFields() {
-        User user = new User();
-        user.setLogin(String.format("test%s", System.currentTimeMillis()));
-        user.setPassword("test");
-        user.setRepeatPassword("test");
-        User[] users = {user};
-        return users;
+        UserGenerator userGenerator = new UserGenerator();
+        User user = userGenerator.generateUserWithMandatoryFields();
+        return new Object[]{user};
     }
 
     @DataProvider
@@ -38,22 +36,19 @@ public class CreateUserNegativeTests extends BaseTest {
     //the only not allowed symbols in login name: <>/ and space
     public Iterator<Object[]> provideUserWithNotAllowedLoginChars() {
         List<User> users = new ArrayList<>();
+        UserGenerator userGenerator = new UserGenerator();
         //user with "/"
-        User userWithSlash = new User();
+        User userWithSlash = userGenerator.generateUserWithMandatoryFields();
         userWithSlash.setLogin("with/");
         users.add(userWithSlash);
         //user with "<"
-        User userWithLeftAngleBracket = new User();
+        User userWithLeftAngleBracket = userGenerator.generateUserWithMandatoryFields();
         userWithLeftAngleBracket.setLogin("with<");
         users.add(userWithLeftAngleBracket);
         //user with ">"
-        User userWithRightAngleBracket = new User();
+        User userWithRightAngleBracket = userGenerator.generateUserWithMandatoryFields();
         userWithRightAngleBracket.setLogin("with>");
         users.add(userWithRightAngleBracket);
-        for (User user: users) {
-            user.setPassword("test");
-            user.setRepeatPassword("test");
-        }
         return users.stream().map((g) -> new Object[]{g}).collect(Collectors.toList()).iterator();
     }
 
@@ -143,8 +138,5 @@ public class CreateUserNegativeTests extends BaseTest {
         app.newUserForm.cancelUserCreation();
         Assert.assertFalse(app.usersPage.isUserCreated(user));
     }
-
-
-
 
 }

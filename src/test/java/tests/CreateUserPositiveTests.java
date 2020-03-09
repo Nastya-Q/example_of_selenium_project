@@ -1,6 +1,7 @@
 package tests;
 
 import data.User;
+import data.UserGenerator;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -20,33 +21,12 @@ public class CreateUserPositiveTests extends BaseTest {
     @DataProvider
     public Iterator<Object[]> provideUsersWithMandatoryAndOptionalFields() {
         List<User> users = new ArrayList<>();
-        //user with mandatory fields
-        User userWithMandatoryFields = new User();
-        users.add(userWithMandatoryFields);
-        //user with optional field: full name
-        User userWithFullName = new User();
-        userWithFullName.setFullName("test full name" + System.currentTimeMillis());
-        users.add(userWithFullName);
-        //user with optional field: email
-        User userWithEmail = new User();
-        userWithEmail.setEmail(System.currentTimeMillis() + "email@google.com");
-        users.add(userWithEmail);
-        //user with optional field: jabber
-        User userWithJabber = new User();
-        userWithJabber.setJabber(System.currentTimeMillis() + "user@jabber.org");
-        users.add(userWithJabber);
-        //user with all optional fields: full name/email/jabber:
-        User userWithAllOptionalFields = new User();
-        userWithAllOptionalFields.setFullName("test full name" + System.currentTimeMillis());
-        userWithAllOptionalFields.setEmail(System.currentTimeMillis() + "email@google.com");
-        userWithAllOptionalFields.setJabber(System.currentTimeMillis() + "user@jabber.org");
-        users.add(userWithAllOptionalFields);
-        //setters for mandatory fields for all test users
-        for (int i = 0; i < users.size(); i++) {
-            users.get(i).setLogin(String.format("login%s-%s", i, System.currentTimeMillis()));
-            users.get(i).setPassword("testpassword");
-            users.get(i).setRepeatPassword("testpassword");
-        }
+        UserGenerator userGenerator = new UserGenerator();
+        users.add(userGenerator.generateUserWithMandatoryFields());
+        users.add(userGenerator.generateUserWithFullName());
+        users.add(userGenerator.generateUserWithEmail());
+        users.add(userGenerator.generateUserWithJabber());
+        users.add(userGenerator.generateUsersWithAllOptionalFields());
         return users.stream().map((g) -> new Object[]{g}).collect(Collectors.toList()).iterator();
     }
 
@@ -56,7 +36,7 @@ public class CreateUserPositiveTests extends BaseTest {
         app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.submitUserCreation();
         String userNameFromUserEditPage = app.usersPage.getUserNameFromEditPage();
-        // check user name on edit page opened after user creation
+        // check user name on edit page automatically opened after user creation
         if (user.getFullName() != null) {
             Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
         } else {

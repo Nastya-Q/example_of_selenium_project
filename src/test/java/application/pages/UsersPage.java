@@ -89,11 +89,7 @@ public class UsersPage extends BasePage{
         //wait until users table list re-loads
         wait.until(ExpectedConditions.stalenessOf(driver.findElement(usersListLocator)));
         List<WebElement> userInfoRows = driver.findElements(userInfoRowLocator);
-        if (userInfoRows.size() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return userInfoRows.size() > 0;
     }
 
     public void deleteUser(User user) {
@@ -109,10 +105,5 @@ public class UsersPage extends BasePage{
     private void openUsersPage() {
         driver.get("http://localhost:8080/users");
     }
-
-
-
-
-
 
 }
