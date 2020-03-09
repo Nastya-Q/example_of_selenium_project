@@ -1,18 +1,21 @@
 package tests;
 
 import application.ApplicationManager;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.openqa.selenium.remote.BrowserType;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
+
+import java.io.IOException;
 
 public class BaseTest {
-    public ApplicationManager app;
+    protected ApplicationManager app = new ApplicationManager(System.getProperty("browser", BrowserType.CHROME));
 
-    @BeforeClass
-    public void start() {
-        app = new ApplicationManager();
+    @BeforeSuite
+    public void start() throws IOException {
+        app.init();
     }
 
-    @AfterClass
+    @AfterSuite(alwaysRun = true)
     public void stop() {
         app.quit();
     }
