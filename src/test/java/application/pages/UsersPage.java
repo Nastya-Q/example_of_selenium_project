@@ -7,13 +7,17 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-public class UsersPage extends BasePage{
+public class UsersPage {
+    private WebDriver driver;
+    private WebDriverWait wait;
 
-    public UsersPage(WebDriver driver) {
-        super(driver);
+    public UsersPage(WebDriver driver, WebDriverWait wait) {
+        this.driver = driver;
+        this.wait = wait;
         PageFactory.initElements(driver, this);
     }
 
@@ -40,7 +44,7 @@ public class UsersPage extends BasePage{
 
 
     public void initNewUserCreation() {
-        openUsersPage();
+//        openUsersPage();
         createNewUserButton.click();
         wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.cr.createUserDialog")));
     }

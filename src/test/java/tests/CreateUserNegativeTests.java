@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class CreateUserNegativeTests extends BaseTest {
     @BeforeClass
     public void login() {
-        app.loginPage.login("root", "root");
+        app.loginAsRoot();
     }
     //expected error messages on user creation form
     private final String MISSING_PASSWORD_MSG = "Password is required!";
@@ -55,6 +55,7 @@ public class CreateUserNegativeTests extends BaseTest {
     //tests for not filled in mandatory fields
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithoutLogin(User user) {
+        app.navigateToUsersPage();
         app.usersPage.initNewUserCreation();
         user.setLogin(null);
         app.newUserForm.fillInUserCreationForm(user, false);
@@ -65,6 +66,7 @@ public class CreateUserNegativeTests extends BaseTest {
 
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithoutPassword(User user) {
+        app.navigateToUsersPage();
         app.usersPage.initNewUserCreation();
         user.setPassword(null);
         user.setRepeatPassword(null);
@@ -76,6 +78,7 @@ public class CreateUserNegativeTests extends BaseTest {
 
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithoutPasswordRepeat(User user) {
+        app.navigateToUsersPage();
         app.usersPage.initNewUserCreation();
         user.setRepeatPassword(null);
         app.newUserForm.fillInUserCreationForm(user, false);
@@ -86,6 +89,7 @@ public class CreateUserNegativeTests extends BaseTest {
 
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithDiffPasswords(User user) {
+        app.navigateToUsersPage();
         app.usersPage.initNewUserCreation();
         user.setRepeatPassword(user.getPassword()+"diff");
         app.newUserForm.fillInUserCreationForm(user, false);
@@ -96,6 +100,7 @@ public class CreateUserNegativeTests extends BaseTest {
 
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createUserWithSpaceInLogin(User user){
+        app.navigateToUsersPage();
         app.usersPage.initNewUserCreation();
         user.setLogin("with space");
         app.newUserForm.fillInUserCreationForm(user,false);
@@ -106,6 +111,7 @@ public class CreateUserNegativeTests extends BaseTest {
 
     @Test(dataProvider = "provideUserWithNotAllowedLoginChars")
     public void provideUserWithNotAllowedLoginChars(User user){
+        app.navigateToUsersPage();
         app.usersPage.initNewUserCreation();
         app.newUserForm.fillInUserCreationForm(user,false);
         app.newUserForm.submitUserCreation();
@@ -117,12 +123,14 @@ public class CreateUserNegativeTests extends BaseTest {
     //todo: optimize
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createDuplicatedUser(User user) {
+        app.navigateToUsersPage();
         app.usersPage.initNewUserCreation();
         app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.submitUserCreation();
         String userNameFromUserEditPage = app.usersPage.getUserNameFromEditPage();
         Assert.assertEquals(userNameFromUserEditPage, user.getLogin(), "user name doesn't match");
         //repeat the same user creation
+        app.navigateToUsersPage();
         app.usersPage.initNewUserCreation();
         app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.submitUserCreation();
@@ -133,6 +141,7 @@ public class CreateUserNegativeTests extends BaseTest {
     @Test(dataProvider = "provideUserWithMandatoryFields")
     //fill in the form and cancel the user creation:
     public void cancelUserCreation(User user) {
+        app.navigateToUsersPage();
         app.usersPage.initNewUserCreation();
         app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.cancelUserCreation();

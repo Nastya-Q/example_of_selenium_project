@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class CreateUserPositiveTests extends BaseTest {
     @BeforeClass
     public void login() {
-        app.loginPage.login("root", "root");
+        app.loginAsRoot();
     }
 
     @DataProvider
@@ -32,6 +32,7 @@ public class CreateUserPositiveTests extends BaseTest {
 
     @Test(dataProvider = "provideUsersWithMandatoryAndOptionalFields")
     public void createNewUser(User user) {
+        app.navigateToUsersPage();
         app.usersPage.initNewUserCreation();
         app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.submitUserCreation();

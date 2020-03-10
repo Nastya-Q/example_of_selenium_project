@@ -6,11 +6,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class LoginPage extends BasePage{
+public class LoginPage {
+    private WebDriver driver;
+    private WebDriverWait wait;
 
-    public LoginPage(WebDriver driver) {
-        super(driver);
+    public LoginPage(WebDriver driver, WebDriverWait wait) {
+        this.driver = driver;
+        this.wait = wait;
         PageFactory.initElements(driver, this);
     }
 
@@ -24,7 +28,6 @@ public class LoginPage extends BasePage{
     private WebElement submitLoginButton;
 
     public void login (String user, String password) {
-        driver.get("http://localhost:8080/login");
         userNameField.sendKeys(user);
         userPasswordField.sendKeys(password);
         submitLoginButton.click();

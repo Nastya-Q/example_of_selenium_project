@@ -8,11 +8,15 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class NewUserForm extends BasePage {
+public class NewUserForm {
+    private WebDriver driver;
+    private WebDriverWait wait;
 
-    public NewUserForm(WebDriver driver) {
-        super(driver);
+    public NewUserForm(WebDriver driver, WebDriverWait wait) {
+        this.driver = driver;
+        this.wait = wait;
         PageFactory.initElements(driver, this);
     }
 

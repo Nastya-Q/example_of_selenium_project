@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class ApplicationManager {
-    protected WebDriver driver;
-    protected WebDriverWait wait;
-    protected Properties properties;
+    private WebDriver driver;
+    private WebDriverWait wait;
+    private Properties properties;
     private String browser;
 
     public LoginPage loginPage;
@@ -37,12 +37,26 @@ public class ApplicationManager {
             driver = new ChromeDriver();
         }
         wait = new WebDriverWait(driver, 10);
-        loginPage = new LoginPage(driver);
-        usersPage = new UsersPage(driver);
-        newUserForm = new NewUserForm(driver);
+        loginPage = new LoginPage(driver, wait);
+        usersPage = new UsersPage(driver, wait);
+        newUserForm = new NewUserForm(driver, wait);
     }
 
     public void quit() {
         driver.quit();
+    }
+
+    public void navigateToLoginPage(){
+        driver.get(properties.getProperty("web.baseUrl") + "login");
+    }
+
+    public void navigateToUsersPage() {
+        driver.get(properties.getProperty("web.baseUrl") + "users");
+        System.out.println("test");
+    }
+
+    public void loginAsRoot(){
+        navigateToLoginPage();
+        loginPage.login(properties.getProperty("web.adminLogin"), properties.getProperty("web.adminPassword"));
     }
 }
