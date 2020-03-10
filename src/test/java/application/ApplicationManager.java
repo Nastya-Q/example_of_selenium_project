@@ -3,6 +3,8 @@ package application;
 import application.pages.LoginPage;
 import application.pages.NewUserForm;
 import application.pages.UsersPage;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -57,5 +59,9 @@ public class ApplicationManager {
     public void loginAsRoot(){
         navigateToLoginPage();
         loginPage.login(properties.getProperty("web.adminLogin"), properties.getProperty("web.adminPassword"));
+    }
+
+    public byte[] takeScreenshot() {
+        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 }
