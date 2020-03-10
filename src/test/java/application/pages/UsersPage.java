@@ -4,6 +4,7 @@ import data.User;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -34,7 +35,7 @@ public class UsersPage {
     //user list locators:
     private By usersListLocator = By.id("id_l.U.usersList.usersList");
     private String userTableBodyRef = "//div[@id='id_l.U.usersList.usersList']//tbody";
-    private By userInfoRowLocator =  By.xpath(userTableBodyRef + "/tr");
+    private By userInfoRowLocator = By.xpath(userTableBodyRef + "/tr");
     private By userLoginNameCellLocator = By.xpath(userTableBodyRef + "/tr[1]/td[1]");
     private By userFullNameCellLocator = By.xpath(userTableBodyRef + "/tr[1]/td[2]");
     private By userEmailAndJabberCellLocator = By.xpath(userTableBodyRef + "/tr[1]/td[3]/div");
@@ -44,7 +45,6 @@ public class UsersPage {
 
 
     public void initNewUserCreation() {
-//        openUsersPage();
         createNewUserButton.click();
         wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.cr.createUserDialog")));
     }
@@ -66,11 +66,13 @@ public class UsersPage {
     }
 
     public User getCreatedUserInfo(User user) {
-        openUsersPage();
+        userSearchField.clear();
         userSearchField.sendKeys(user.getLogin());
         userSearchButton.click();
-        //wait until user list table re-draws
-        wait.until(ExpectedConditions.stalenessOf(driver.findElement(usersListLocator)));
+        // only for google chrome: wait until user list re-draws
+        if (((RemoteWebDriver) driver).getCapabilities().getBrowserName().equalsIgnoreCase("chrome")) {
+            wait.until(ExpectedConditions.stalenessOf(driver.findElement(usersListLocator)));
+        }
         User foundUser = new User();
         foundUser.setLogin(driver.findElement(userLoginNameCellLocator).getText());
         foundUser.setFullName(driver.findElement(userFullNameCellLocator).getText());
@@ -87,17 +89,17 @@ public class UsersPage {
     }
 
     public Boolean isUserCreated(User user) {
-        openUsersPage();
         userSearchField.sendKeys(user.getLogin());
         userSearchButton.click();
-        //wait until users table list re-loads
-        wait.until(ExpectedConditions.stalenessOf(driver.findElement(usersListLocator)));
+        // only for google chrome: wait until user list re-draws
+        if (((RemoteWebDriver) driver).getCapabilities().getBrowserName().equalsIgnoreCase("chrome")) {
+            wait.until(ExpectedConditions.stalenessOf(driver.findElement(usersListLocator)));
+        }
         List<WebElement> userInfoRows = driver.findElements(userInfoRowLocator);
         return userInfoRows.size() > 0;
     }
 
     public void deleteUser(User user) {
-        openUsersPage();
         userSearchField.sendKeys(user.getLogin());
         userSearchButton.click();
         wait.until(ExpectedConditions.elementToBeClickable(usersListLocator));
@@ -105,9 +107,4 @@ public class UsersPage {
         userInfoRow.findElement(deleteUserLocator).click();
         driver.switchTo().alert().accept();
     }
-
-    private void openUsersPage() {
-        driver.get("http://localhost:8080/users");
-    }
-
 }

@@ -44,6 +44,7 @@ public class CreateUserPositiveTests extends BaseTest {
             Assert.assertEquals(userNameFromUserEditPage, user.getLogin(), "user name doesn't match");
         }
         // find created used and check user info in the users list (login, full name, email/jabber)
+        app.navigateToUsersPage();
         Assert.assertTrue(app.usersPage.isUserCreated(user));
         User createdUserInfo = app.usersPage.getCreatedUserInfo(user);
         if (user.getFullName() == null) {
@@ -56,6 +57,7 @@ public class CreateUserPositiveTests extends BaseTest {
     // delete test user after each creation
     public void teardown(Object[] parameters) {
         User user = (User) parameters[0];
+        app.navigateToUsersPage();
         app.usersPage.deleteUser(user);
     }
 

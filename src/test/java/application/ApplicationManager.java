@@ -52,7 +52,6 @@ public class ApplicationManager {
 
     public void navigateToUsersPage() {
         driver.get(properties.getProperty("web.baseUrl") + "users");
-        System.out.println("test");
     }
 
     public void loginAsRoot(){
