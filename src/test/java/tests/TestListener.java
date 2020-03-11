@@ -5,6 +5,8 @@ import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
+import java.io.IOException;
+
 public class TestListener implements ITestListener {
     @Override
     public void onTestStart(ITestResult iTestResult) {
@@ -17,13 +19,12 @@ public class TestListener implements ITestListener {
     }
 
     @Override
-    public void onTestFailure(ITestResult iTestResult) {
-        ApplicationManager app = (ApplicationManager) iTestResult.getTestContext().getAttribute("app");
-        saveScreenshot(app.takeScreenshot());
-        System.out.println("fail");
+    public void onTestFailure(ITestResult result) {
+        ApplicationManager app = (ApplicationManager) result.getTestContext().getAttribute("app");
+        app.takeScreenshot(result.getName());
+        System.out.println(result.getName());
     }
 
-//    @Attachment(value = "Page screenshot", type = "image/png")
     public byte[] saveScreenshot(byte[] screenShot) {
         return screenShot;
     }

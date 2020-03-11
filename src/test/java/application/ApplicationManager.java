@@ -8,6 +8,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.File;
@@ -31,8 +32,8 @@ public class ApplicationManager {
     }
 
     public void init() throws IOException {
-        String target = System.getProperty("target", "local");
-        properties.load(new FileReader(new File(String.format("src/test/resources/%s.properties", target))));
+        String targetEnvironment = System.getProperty("target", "local");
+        properties.load(new FileReader(new File(String.format("src/test/resources/%s.properties", targetEnvironment))));
         if (browser.equals(BrowserType.FIREFOX)) {
             driver = new FirefoxDriver();
         } else if (browser.equals(BrowserType.CHROME)) {
@@ -61,7 +62,16 @@ public class ApplicationManager {
         loginPage.login(properties.getProperty("web.adminLogin"), properties.getProperty("web.adminPassword"));
     }
 
-    public byte[] takeScreenshot() {
-        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+    public void takeScreenshot(String methodName) {
+        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        try {
+            //Create unique file name and store in under screenshot folder of root directory
+            String screenshotpath = "src/failed_test_screenshots/" + methodName + System.currentTimeMillis() + ".png";
+            //Copy the file to destination
+            FileHandler.copy(scrFile, new File(screenshotpath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
