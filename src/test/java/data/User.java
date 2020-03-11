@@ -1,10 +1,8 @@
 package data;
 
-import lombok.Data;
-
 import java.util.Objects;
 
-@Data
+
 public class User {
     String login;
     String password;
@@ -12,6 +10,54 @@ public class User {
     String email;
     String fullName;
     String jabber;
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRepeatPassword() {
+        return repeatPassword;
+    }
+
+    public void setRepeatPassword(String repeatPassword) {
+        this.repeatPassword = repeatPassword;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getJabber() {
+        return jabber;
+    }
+
+    public void setJabber(String jabber) {
+        this.jabber = jabber;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -30,7 +30,7 @@ public class UsersPage {
     private WebElement userSearchButton;
 
     //locators for dynamic elements (cannot be received with using @FindBy):
-    private By errorPopupLocator = By.xpath("//*[@id='__popup__2']//li[@class='errorSeverity']");
+    private By errorPopupLocator = By.className("errorSeverity");
     private By usersCounterLocator = By.xpath("//*[@title='User list']/[]");
     //user list locators:
     private By usersListLocator = By.id("id_l.U.usersList.usersList");
