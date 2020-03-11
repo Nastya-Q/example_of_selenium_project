@@ -47,7 +47,6 @@ public class CreateUserPositiveTests extends BaseTest {
         app.navigateToUsersPage();
         Assert.assertTrue(app.usersPage.isUserCreated(user));
         User createdUserInfo = app.usersPage.getCreatedUserInfo(user);
-        createdUserInfo.setLogin("test");
         if (user.getFullName() == null) {
             user.setFullName(user.getLogin()); //if user full name is not defined, then in full name section login name is shown instead
     }
