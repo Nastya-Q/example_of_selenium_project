@@ -27,11 +27,14 @@ public class LoginPage {
     @FindBy (id = "id_l.L.loginButton")
     private WebElement submitLoginButton;
 
+    //locator for dynamic elements (cannot be received with using @FindBy) :
+    By searchPanelLocator = By.id("id_l.D.sb.searchPanel");
+
     public void login (String user, String password) {
         userNameField.sendKeys(user);
         userPasswordField.sendKeys(password);
         submitLoginButton.click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("id_l.D.sb.searchPanel")));
+        wait.until(ExpectedConditions.presenceOfElementLocated(searchPanelLocator));
     }
 
 }
