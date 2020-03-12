@@ -6,6 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +17,7 @@ public class CreateUserNegativeTests extends BaseTest {
     public void login() {
         app.loginAsRoot();
     }
+
     //expected error messages on user creation form
     private final String MISSING_PASSWORD_MSG = "Password is required!";
     private final String MISSING_LOGIN_MSG = "Login is required!";
@@ -91,7 +93,7 @@ public class CreateUserNegativeTests extends BaseTest {
     public void createNewUserWithDiffPasswords(User user) {
         app.navigateToUsersPage();
         app.usersPage.initNewUserCreation();
-        user.setRepeatPassword(user.getPassword()+"diff");
+        user.setRepeatPassword(user.getPassword() + "diff");
         app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.newUserForm.getErrorMessageOnMandatoryFields();
@@ -99,30 +101,30 @@ public class CreateUserNegativeTests extends BaseTest {
     }
 
     @Test(dataProvider = "provideUserWithMandatoryFields")
-    public void createUserWithSpaceInLogin(User user){
+    public void createUserWithSpaceInLogin(User user) {
         app.navigateToUsersPage();
         app.usersPage.initNewUserCreation();
         user.setLogin("with space");
-        app.newUserForm.fillInUserCreationForm(user,false);
+        app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.usersPage.getPopupErrorMessage();
         Assert.assertEquals(actualErrorMessage, SPACE_IN_LOGIN_MSG, "error message doesn't match!");
     }
 
     @Test(dataProvider = "provideUserWithNotAllowedLoginChars")
-    public void provideUserWithNotAllowedLoginChars(User user){
+    public void provideUserWithNotAllowedLoginChars(User user) {
         app.navigateToUsersPage();
         app.usersPage.initNewUserCreation();
-        app.newUserForm.fillInUserCreationForm(user,false);
+        app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.usersPage.getPopupErrorMessage();
         Assert.assertEquals(actualErrorMessage, RESTRICTED_LOGINCHARS_MSG, "error message doesn't match!");
     }
 
     //duplicated user name
-    //todo: optimize
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createDuplicatedUser(User user) {
+        // create user
         app.navigateToUsersPage();
         app.usersPage.initNewUserCreation();
         app.newUserForm.fillInUserCreationForm(user, false);

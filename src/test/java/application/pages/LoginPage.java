@@ -20,17 +20,15 @@ public class LoginPage {
 
     @FindBy(id = "id_l.L.login")
     private WebElement userNameField;
-
     @FindBy(id = "id_l.L.password")
     private WebElement userPasswordField;
-
-    @FindBy (id = "id_l.L.loginButton")
+    @FindBy(id = "id_l.L.loginButton")
     private WebElement submitLoginButton;
 
     //locator for dynamic elements (cannot be received with using @FindBy) :
-    By searchPanelLocator = By.id("id_l.D.sb.searchPanel");
+    private By searchPanelLocator = By.id("id_l.D.sb.searchPanel");
 
-    public void login (String user, String password) {
+    public void login(String user, String password) {
         userNameField.sendKeys(user);
         userPasswordField.sendKeys(password);
         submitLoginButton.click();

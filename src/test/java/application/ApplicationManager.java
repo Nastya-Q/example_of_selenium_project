@@ -11,6 +11,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -49,7 +50,7 @@ public class ApplicationManager {
         driver.quit();
     }
 
-    public void navigateToLoginPage(){
+    public void navigateToLoginPage() {
         driver.get(properties.getProperty("web.baseUrl") + "login");
     }
 
@@ -57,7 +58,7 @@ public class ApplicationManager {
         driver.get(properties.getProperty("web.baseUrl") + "users");
     }
 
-    public void loginAsRoot(){
+    public void loginAsRoot() {
         navigateToLoginPage();
         loginPage.login(properties.getProperty("web.adminLogin"), properties.getProperty("web.adminPassword"));
     }
@@ -65,9 +66,7 @@ public class ApplicationManager {
     public void takeScreenshot(String methodName) {
         File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         try {
-            //Create unique file name and store in under screenshot folder of root directory
             String screenshotpath = "src/failed_test_screenshots/" + methodName + System.currentTimeMillis() + ".png";
-            //Copy the file to destination
             FileHandler.copy(scrFile, new File(screenshotpath));
         } catch (IOException e) {
             e.printStackTrace();

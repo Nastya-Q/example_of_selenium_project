@@ -59,12 +59,6 @@ public class UsersPage {
         return wait.until(ExpectedConditions.elementToBeClickable(errorPopupLocator)).getText();
     }
 
-    //todo: fix later to be able to get created users count from left menu
-    public Integer getAllUsersCount() {
-        String count = driver.findElement(usersCounterLocator).getText();
-        return Integer.valueOf(driver.findElement(By.className("admin-menu-counter")).getText());
-    }
-
     public User getCreatedUserInfo(User user) {
         userSearchField.clear();
         userSearchField.sendKeys(user.getLogin());
