@@ -44,7 +44,7 @@ public class UsersPage {
     private By deleteUserLocator = By.xpath(userTableBodyRef + "/tr[1]/td[6]/a[1]");
 
 
-    public void initNewUserCreation() {
+    public void openNewUserForm() {
         createNewUserButton.click();
         wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.cr.createUserDialog")));
     }

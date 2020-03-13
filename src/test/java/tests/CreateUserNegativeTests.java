@@ -57,10 +57,8 @@ public class CreateUserNegativeTests extends BaseTest {
     //tests for not filled in mandatory fields
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithoutLogin(User user) {
-        app.navigateToUsersPage();
-        app.usersPage.initNewUserCreation();
         user.setLogin(null);
-        app.newUserForm.fillInUserCreationForm(user, false);
+        startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.newUserForm.getErrorMessageOnMandatoryFields();
         Assert.assertEquals(actualErrorMessage, MISSING_LOGIN_MSG, "error message doesn't match!");
@@ -68,11 +66,9 @@ public class CreateUserNegativeTests extends BaseTest {
 
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithoutPassword(User user) {
-        app.navigateToUsersPage();
-        app.usersPage.initNewUserCreation();
         user.setPassword(null);
         user.setRepeatPassword(null);
-        app.newUserForm.fillInUserCreationForm(user, false);
+        startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.newUserForm.getErrorMessageOnMandatoryFields();
         Assert.assertEquals(actualErrorMessage, MISSING_PASSWORD_MSG, "error message doesn't match!");
@@ -80,10 +76,8 @@ public class CreateUserNegativeTests extends BaseTest {
 
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithoutPasswordRepeat(User user) {
-        app.navigateToUsersPage();
-        app.usersPage.initNewUserCreation();
         user.setRepeatPassword(null);
-        app.newUserForm.fillInUserCreationForm(user, false);
+        startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.newUserForm.getErrorMessageOnMandatoryFields();
         Assert.assertEquals(actualErrorMessage, DIFF_PASSWORDS_MSG, "error message doesn't match!");
@@ -91,10 +85,8 @@ public class CreateUserNegativeTests extends BaseTest {
 
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithDiffPasswords(User user) {
-        app.navigateToUsersPage();
-        app.usersPage.initNewUserCreation();
         user.setRepeatPassword(user.getPassword() + "diff");
-        app.newUserForm.fillInUserCreationForm(user, false);
+        startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.newUserForm.getErrorMessageOnMandatoryFields();
         Assert.assertEquals(actualErrorMessage, DIFF_PASSWORDS_MSG, "error message doesn't match!");
@@ -102,10 +94,8 @@ public class CreateUserNegativeTests extends BaseTest {
 
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createUserWithSpaceInLogin(User user) {
-        app.navigateToUsersPage();
-        app.usersPage.initNewUserCreation();
         user.setLogin("with space");
-        app.newUserForm.fillInUserCreationForm(user, false);
+        startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.usersPage.getPopupErrorMessage();
         Assert.assertEquals(actualErrorMessage, SPACE_IN_LOGIN_MSG, "error message doesn't match!");
@@ -113,9 +103,7 @@ public class CreateUserNegativeTests extends BaseTest {
 
     @Test(dataProvider = "provideUserWithNotAllowedLoginChars")
     public void provideUserWithNotAllowedLoginChars(User user) {
-        app.navigateToUsersPage();
-        app.usersPage.initNewUserCreation();
-        app.newUserForm.fillInUserCreationForm(user, false);
+        startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.usersPage.getPopupErrorMessage();
         Assert.assertEquals(actualErrorMessage, RESTRICTED_LOGINCHARS_MSG, "error message doesn't match!");
@@ -125,16 +113,12 @@ public class CreateUserNegativeTests extends BaseTest {
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createDuplicatedUser(User user) {
         // create user
-        app.navigateToUsersPage();
-        app.usersPage.initNewUserCreation();
-        app.newUserForm.fillInUserCreationForm(user, false);
+        startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
         String userNameFromUserEditPage = app.usersPage.getUserNameFromEditPage();
         Assert.assertEquals(userNameFromUserEditPage, user.getLogin(), "user name doesn't match");
         //repeat the same user creation
-        app.navigateToUsersPage();
-        app.usersPage.initNewUserCreation();
-        app.newUserForm.fillInUserCreationForm(user, false);
+        startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
         String actualErrorMessage = app.usersPage.getPopupErrorMessage();
         Assert.assertEquals(actualErrorMessage, DUPLICATE_USERLOGIN_MSG, "error message doesn't match!");
@@ -143,11 +127,15 @@ public class CreateUserNegativeTests extends BaseTest {
     @Test(dataProvider = "provideUserWithMandatoryFields")
     //fill in the form and cancel the user creation:
     public void cancelUserCreation(User user) {
-        app.navigateToUsersPage();
-        app.usersPage.initNewUserCreation();
-        app.newUserForm.fillInUserCreationForm(user, false);
+        startNewUserCreation(user);
         app.newUserForm.cancelUserCreation();
         Assert.assertFalse(app.usersPage.isUserCreated(user));
+    }
+
+    private void startNewUserCreation(User user) {
+        app.navigateToUsersPage();
+        app.usersPage.openNewUserForm();
+        app.newUserForm.fillInUserCreationForm(user, false);
     }
 
 }

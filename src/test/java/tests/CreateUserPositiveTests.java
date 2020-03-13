@@ -38,7 +38,7 @@ public class CreateUserPositiveTests extends BaseTest {
         String specialSymbolsAddition = "!±@#$%^&*()-_=+{}[];:\"'|\\<>,.?/~`";
         user.setPassword(user.getPassword() + specialSymbolsAddition);
         user.setRepeatPassword(user.getPassword());
-        //here long name is truncated so making it shorter
+        //here long name is truncated on UI so making it shorter
         user.setFullName(specialSymbolsAddition);
         user.setEmail(user.getEmail() + specialSymbolsAddition);
         user.setJabber(user.getJabber() + specialSymbolsAddition);
@@ -48,12 +48,9 @@ public class CreateUserPositiveTests extends BaseTest {
 
     @Test(dataProvider = "provideUsersWithMandatoryAndOptionalFields")
     public void createNewUser(User user) {
-        app.navigateToUsersPage();
-        app.usersPage.initNewUserCreation();
-        app.newUserForm.fillInUserCreationForm(user, false);
-        app.newUserForm.submitUserCreation();
+        createUser(user);
         String userNameFromUserEditPage = app.usersPage.getUserNameFromEditPage();
-        // check user name on edit page automatically opened after user creation
+        // check created user name on edit page automatically opened after user creation
         if (user.getFullName() != null) {
             Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
         } else {
@@ -73,10 +70,7 @@ public class CreateUserPositiveTests extends BaseTest {
     //this test shows that special symbols are allowed in every field except of login
     // (corresponding negative test for login is in negative tests)
     public void createUserWithSpecialSymbolsInFields(User user) {
-        app.navigateToUsersPage();
-        app.usersPage.initNewUserCreation();
-        app.newUserForm.fillInUserCreationForm(user, false);
-        app.newUserForm.submitUserCreation();
+        createUser(user);
         String userNameFromUserEditPage = app.usersPage.getUserNameFromEditPage();
         // check user name on edit page automatically opened after user creation
         if (user.getFullName() != null) {
@@ -92,6 +86,13 @@ public class CreateUserPositiveTests extends BaseTest {
             user.setFullName(user.getLogin()); //if user full name is not defined, then in full name section login name is shown instead
         }
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
+    }
+
+    private void createUser(User user) {
+        app.navigateToUsersPage();
+        app.usersPage.openNewUserForm();
+        app.newUserForm.fillInUserCreationForm(user, false);
+        app.newUserForm.submitUserCreation();
     }
 
     @AfterMethod
