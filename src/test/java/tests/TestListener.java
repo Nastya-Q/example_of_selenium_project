@@ -20,13 +20,7 @@ public class TestListener implements ITestListener {
     public void onTestFailure(ITestResult result) {
         ApplicationManager app = (ApplicationManager) result.getTestContext().getAttribute("app");
         app.takeScreenshot(result.getName());
-        System.out.println(result.getName());
     }
-
-    public byte[] saveScreenshot(byte[] screenShot) {
-        return screenShot;
-    }
-
 
     @Override
     public void onTestSkipped(ITestResult iTestResult) {
