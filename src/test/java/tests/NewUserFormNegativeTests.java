@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CreateUserNegativeTests extends BaseTest {
+public class NewUserFormNegativeTests extends BaseTest {
     @BeforeClass
     public void login() {
         app.loginAsRoot();
@@ -55,6 +55,8 @@ public class CreateUserNegativeTests extends BaseTest {
     }
 
     //tests for not filled in mandatory fields
+
+    //login name is empty
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithoutLogin(User user) {
         user.setLogin(null);
@@ -64,6 +66,7 @@ public class CreateUserNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, MISSING_LOGIN_MSG, "error message doesn't match!");
     }
 
+    //password is empty
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithoutPassword(User user) {
         user.setPassword(null);
@@ -74,6 +77,7 @@ public class CreateUserNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, MISSING_PASSWORD_MSG, "error message doesn't match!");
     }
 
+    //repeat password is empty
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithoutPasswordRepeat(User user) {
         user.setRepeatPassword(null);
@@ -83,6 +87,7 @@ public class CreateUserNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, DIFF_PASSWORDS_MSG, "error message doesn't match!");
     }
 
+    //passwords don't match
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithDiffPasswords(User user) {
         user.setRepeatPassword(user.getPassword() + "diff");
@@ -92,6 +97,7 @@ public class CreateUserNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, DIFF_PASSWORDS_MSG, "error message doesn't match!");
     }
 
+    //login name contains space
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createUserWithSpaceInLogin(User user) {
         user.setLogin("with space");
@@ -101,6 +107,7 @@ public class CreateUserNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, SPACE_IN_LOGIN_MSG, "error message doesn't match!");
     }
 
+    //login name contains restricted characters (<>/)
     @Test(dataProvider = "provideUserWithNotAllowedLoginChars")
     public void provideUserWithNotAllowedLoginChars(User user) {
         startNewUserCreation(user);
@@ -109,7 +116,7 @@ public class CreateUserNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, RESTRICTED_LOGINCHARS_MSG, "error message doesn't match!");
     }
 
-    //duplicated user name
+    //duplicated user name (trying to create user with already existing login name)
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createDuplicatedUser(User user) {
         // create user
@@ -124,8 +131,8 @@ public class CreateUserNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, DUPLICATE_USERLOGIN_MSG, "error message doesn't match!");
     }
 
+    //check that user is not created when clicking Cancel on New User Form
     @Test(dataProvider = "provideUserWithMandatoryFields")
-    //fill in the form and cancel the user creation:
     public void cancelUserCreation(User user) {
         startNewUserCreation(user);
         app.newUserForm.cancelUserCreation();

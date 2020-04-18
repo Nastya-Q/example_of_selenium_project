@@ -3,8 +3,8 @@
 <suite name="Create-User-Suite" verbose="1" >
     <test name="Create User Tests">
         <classes>
-            <class name="tests.CreateUserPositiveTests"/>
-            <class name="tests.CreateUserNegativeTests"/>
+            <class name="tests.NewUserFormPositiveTests"/>
+            <class name="tests.NewUserFormNegativeTests"/>
         </classes>
     </test>
 </suite>

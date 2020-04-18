@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CreateUserPositiveTests extends BaseTest {
+public class NewUserFormPositiveTests extends BaseTest {
     @BeforeClass
     public void login() {
         app.loginAsRoot();
@@ -46,6 +46,8 @@ public class CreateUserPositiveTests extends BaseTest {
     }
 
 
+    //check that user created with different options:
+    //only mandatory fields, or optional fields 1 by 1, or all optional fields are filled in
     @Test(dataProvider = "provideUsersWithMandatoryAndOptionalFields")
     public void createNewUser(User user) {
         createUser(user);
@@ -66,9 +68,9 @@ public class CreateUserPositiveTests extends BaseTest {
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
     }
 
-    @Test(dataProvider = "provideOneUserWithAllFields")
     //this test shows that special symbols are allowed in every field except of login
     // (corresponding negative test for login is in negative tests)
+    @Test(dataProvider = "provideOneUserWithAllFields")
     public void createUserWithSpecialSymbolsInFields(User user) {
         createUser(user);
         String userNameFromUserEditPage = app.usersPage.getUserNameFromEditPage();
