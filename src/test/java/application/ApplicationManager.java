@@ -2,6 +2,7 @@ package application;
 
 import application.pages.LoginPage;
 import application.pages.NewUserForm;
+import application.pages.TopMenu;
 import application.pages.UsersPage;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -26,6 +27,7 @@ public class ApplicationManager {
     public LoginPage loginPage;
     public UsersPage usersPage;
     public NewUserForm newUserForm;
+    public TopMenu topMenu;
 
     public ApplicationManager(String browser) {
         this.browser = browser;
@@ -44,6 +46,7 @@ public class ApplicationManager {
         loginPage = new LoginPage(driver, wait);
         usersPage = new UsersPage(driver, wait);
         newUserForm = new NewUserForm(driver, wait);
+        topMenu = new TopMenu(driver, wait);
     }
 
     public void quit() {
@@ -61,6 +64,10 @@ public class ApplicationManager {
     public void loginAsRoot() {
         navigateToLoginPage();
         loginPage.login(properties.getProperty("web.adminLogin"), properties.getProperty("web.adminPassword"));
+    }
+
+    public void logout() {
+        topMenu.logout();
     }
 
     public void takeScreenshot(String methodName) {

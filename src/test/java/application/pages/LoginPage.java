@@ -15,23 +15,18 @@ public class LoginPage {
     public LoginPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
-        PageFactory.initElements(driver, this);
     }
-
-    @FindBy(id = "id_l.L.login")
-    private WebElement userNameField;
-    @FindBy(id = "id_l.L.password")
-    private WebElement userPasswordField;
-    @FindBy(id = "id_l.L.loginButton")
-    private WebElement submitLoginButton;
 
     //locator for dynamic elements (cannot be received with using @FindBy) :
     private By searchPanelLocator = By.id("id_l.D.sb.searchPanel");
+    private By loginFieldLocator = By.id("id_l.L.login");
+    private By passwordFieldLocator = By.id("id_l.L.password");
+    private By submitLoginButtonLocator = By.id("id_l.L.loginButton");
 
     public void login(String user, String password) {
-        userNameField.sendKeys(user);
-        userPasswordField.sendKeys(password);
-        submitLoginButton.click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(loginFieldLocator)).sendKeys(user);
+        driver.findElement(passwordFieldLocator).sendKeys(password);
+        driver.findElement(submitLoginButtonLocator).click();
         wait.until(ExpectedConditions.presenceOfElementLocated(searchPanelLocator));
     }
 
