@@ -132,14 +132,6 @@ public class NewUserFormNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, DUPLICATE_USERLOGIN_MSG, "error message doesn't match!");
     }
 
-//    //check that user is not created when clicking Cancel on New User Form
-//    @Test(dataProvider = "provideUserWithMandatoryFields")
-//    public void cancelUserCreation(User user) {
-//        startNewUserCreation(user);
-//        app.newUserForm.cancelUserCreation();
-//        Assert.assertFalse(app.manageUsersPage.isUserCreated(user));
-//    }
-
     private void startNewUserCreation(User user) {
         app.navigateToUsersPage();
         app.manageUsersPage.openNewUserForm();
@@ -147,8 +139,8 @@ public class NewUserFormNegativeTests extends BaseTest {
     }
 
     @AfterMethod
-    public void closePopupErrorNotification(){
-        app.manageUsersPage.closeErrorTopPopup();
+    public void closeNewUserForm(){
+        app.newUserForm.cancelUserCreation();
     }
 
 }

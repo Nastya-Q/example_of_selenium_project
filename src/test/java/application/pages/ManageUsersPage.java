@@ -33,6 +33,7 @@ public class ManageUsersPage {
     private By errorPopupLocator = By.className("errorSeverity");
     private By errorPopupClose = By.xpath("//*[@class='message error']//*[@class='controls']/*[@title='close']");
     private By usersCounterLocator = By.xpath("//*[@title='User list']/[]");
+    private By createNewUserBtnLocator = By.id("id_l.U.createNewUser");
     //user list locators:
     private By usersListLocator = By.id("id_l.U.usersList.usersList");
     private String userTableBodyRef = "//div[@id='id_l.U.usersList.usersList']//tbody";
@@ -64,6 +65,7 @@ public class ManageUsersPage {
         wait.until(ExpectedConditions.elementToBeClickable(errorPopupClose)).click();
     }
 
+
     public User getCreatedUserInfo(User user) {
         userSearchField.clear();
         userSearchField.sendKeys(user.getLogin());
@@ -87,7 +89,7 @@ public class ManageUsersPage {
         return foundUser;
     }
 
-    public Boolean isUserCreated(User user) {
+    public boolean isUserCreated(User user) {
         userSearchField.sendKeys(user.getLogin());
         userSearchButton.click();
         // only for google chrome: wait until user list re-draws
@@ -98,13 +100,12 @@ public class ManageUsersPage {
         return userInfoRows.size() > 0;
     }
 
-    public void deleteUser(User user) {
-        userSearchField.sendKeys(user.getLogin());
-        userSearchButton.click();
-        wait.until(ExpectedConditions.elementToBeClickable(usersListLocator));
-        WebElement userInfoRow = wait.until(ExpectedConditions.elementToBeClickable(userInfoRowLocator));
-        userInfoRow.findElement(deleteUserLocator).click();
-        driver.switchTo().alert().accept();
+    public void deleteUserIfExist(User user) {
+        if (isUserCreated(user)) {
+            WebElement userInfoRow = wait.until(ExpectedConditions.elementToBeClickable(userInfoRowLocator));
+            userInfoRow.findElement(deleteUserLocator).click();
+            driver.switchTo().alert().accept();
+        }
     }
 
 }

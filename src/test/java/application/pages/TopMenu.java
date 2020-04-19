@@ -32,7 +32,8 @@ public class TopMenu {
     }
 
     public String getUserNameFromMenuPanel() {
-        return driver.findElement(userNameDropdownMenu).getText();
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(userNameDropdownMenu)).getText();
+//        return driver.findElement(userNameDropdownMenu).getText();
     }
 
     public void openManageUsersPage() {

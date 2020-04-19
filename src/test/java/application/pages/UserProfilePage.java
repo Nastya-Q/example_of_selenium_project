@@ -16,7 +16,7 @@ public class UserProfilePage {
 
     //locators
     private By changePwdDialogLocator = By.id("id_l.U.ChangePasswordDialog.changePasswordDlg");
-    private By topNotificationPopupLocator = By.className("err");
+    private By topNotificationPopupLocator = By.xpath("//*[@id='__popup__1']//tr[1]/td[2]");
 
     public String getPopupNotificationText() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(topNotificationPopupLocator)).getText();

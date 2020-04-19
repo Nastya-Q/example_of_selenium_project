@@ -67,8 +67,8 @@ public class NewUserLoginPositiveTests extends BaseTest{
         Assert.assertTrue(app.userProfilePage.isPwdChangeDialogShown());
     }
 
-    @AfterMethod
-    public void logout() {
-        app.logout();
-    }
+//    @AfterMethod
+//    public void logout() {
+//        app.logout();
+//    }
 }

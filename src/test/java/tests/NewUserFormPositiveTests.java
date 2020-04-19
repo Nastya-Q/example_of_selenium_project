@@ -90,6 +90,15 @@ public class NewUserFormPositiveTests extends BaseTest {
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
     }
 
+    //todo: think about this test
+    //check that user is not created when clicking Cancel on New User Form
+//    @Test(dataProvider = "provideUserWithMandatoryFields")
+//    public void cancelUserCreation(User user) {
+//        startNewUserCreation(user);
+//        app.newUserForm.cancelUserCreation();
+//        Assert.assertFalse(app.manageUsersPage.isUserCreated(user));
+//    }
+
     private void createUser(User user) {
         app.navigateToUsersPage();
         app.manageUsersPage.openNewUserForm();
@@ -102,7 +111,7 @@ public class NewUserFormPositiveTests extends BaseTest {
     public void teardown(Object[] parameters) {
         User user = (User) parameters[0];
         app.navigateToUsersPage();
-        app.manageUsersPage.deleteUser(user);
+        app.manageUsersPage.deleteUserIfExist(user);
     }
 
 }
