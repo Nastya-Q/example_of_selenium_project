@@ -27,7 +27,7 @@ public class LoginPage {
         wait.until(ExpectedConditions.visibilityOfElementLocated(loginFieldLocator)).sendKeys(user);
         driver.findElement(passwordFieldLocator).sendKeys(password);
         driver.findElement(submitLoginButtonLocator).click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(searchPanelLocator));
+//        wait.until(ExpectedConditions.presenceOfElementLocated(searchPanelLocator));
     }
 
 }

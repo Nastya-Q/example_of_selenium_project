@@ -3,6 +3,7 @@ package tests;
 import data.User;
 import data.UserGenerator;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -103,7 +104,7 @@ public class NewUserFormNegativeTests extends BaseTest {
         user.setLogin("with space");
         startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
-        String actualErrorMessage = app.usersPage.getPopupErrorMessage();
+        String actualErrorMessage = app.manageUsersPage.getPopupErrorMessage();
         Assert.assertEquals(actualErrorMessage, SPACE_IN_LOGIN_MSG, "error message doesn't match!");
     }
 
@@ -112,7 +113,7 @@ public class NewUserFormNegativeTests extends BaseTest {
     public void provideUserWithNotAllowedLoginChars(User user) {
         startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
-        String actualErrorMessage = app.usersPage.getPopupErrorMessage();
+        String actualErrorMessage = app.manageUsersPage.getPopupErrorMessage();
         Assert.assertEquals(actualErrorMessage, RESTRICTED_LOGINCHARS_MSG, "error message doesn't match!");
     }
 
@@ -122,27 +123,32 @@ public class NewUserFormNegativeTests extends BaseTest {
         // create user
         startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
-        String userNameFromUserEditPage = app.usersPage.getUserNameFromEditPage();
+        String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
         Assert.assertEquals(userNameFromUserEditPage, user.getLogin(), "user name doesn't match");
         //repeat the same user creation
         startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
-        String actualErrorMessage = app.usersPage.getPopupErrorMessage();
+        String actualErrorMessage = app.manageUsersPage.getPopupErrorMessage();
         Assert.assertEquals(actualErrorMessage, DUPLICATE_USERLOGIN_MSG, "error message doesn't match!");
     }
 
-    //check that user is not created when clicking Cancel on New User Form
-    @Test(dataProvider = "provideUserWithMandatoryFields")
-    public void cancelUserCreation(User user) {
-        startNewUserCreation(user);
-        app.newUserForm.cancelUserCreation();
-        Assert.assertFalse(app.usersPage.isUserCreated(user));
-    }
+//    //check that user is not created when clicking Cancel on New User Form
+//    @Test(dataProvider = "provideUserWithMandatoryFields")
+//    public void cancelUserCreation(User user) {
+//        startNewUserCreation(user);
+//        app.newUserForm.cancelUserCreation();
+//        Assert.assertFalse(app.manageUsersPage.isUserCreated(user));
+//    }
 
     private void startNewUserCreation(User user) {
         app.navigateToUsersPage();
-        app.usersPage.openNewUserForm();
+        app.manageUsersPage.openNewUserForm();
         app.newUserForm.fillInUserCreationForm(user, false);
+    }
+
+    @AfterMethod
+    public void closePopupErrorNotification(){
+        app.manageUsersPage.closeErrorTopPopup();
     }
 
 }

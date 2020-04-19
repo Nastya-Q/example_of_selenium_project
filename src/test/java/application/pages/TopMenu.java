@@ -17,6 +17,8 @@ public class TopMenu {
 
     //locators
     private By userNameDropdownMenu = By.xpath("//div[@class='ring-menu__right']//*[contains(@data-ring-dropdown, 'Log out')]");
+    private By adminDropdownMenu = By.xpath("//div[@class='ring-menu__right']//*[contains(@data-ring-dropdown, 'Users')]");
+    private By manageUsersMenuItem = By.xpath("//*[text()='Users']");
     private By logoutMenuItem = By.xpath("//*[text()='Log out']");
     private By dashboardLink = By.xpath("//*[@title='YouTrack Dashboard']");
 
@@ -31,5 +33,10 @@ public class TopMenu {
 
     public String getUserNameFromMenuPanel() {
         return driver.findElement(userNameDropdownMenu).getText();
+    }
+
+    public void openManageUsersPage() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(adminDropdownMenu)).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(manageUsersMenuItem)).click();
     }
 }

@@ -12,11 +12,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-public class UsersPage {
+public class ManageUsersPage {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    public UsersPage(WebDriver driver, WebDriverWait wait) {
+    public ManageUsersPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
         PageFactory.initElements(driver, this);
@@ -31,6 +31,7 @@ public class UsersPage {
 
     //locators for dynamic elements (cannot be received with using @FindBy):
     private By errorPopupLocator = By.className("errorSeverity");
+    private By errorPopupClose = By.xpath("//*[@class='message error']//*[@class='controls']/*[@title='close']");
     private By usersCounterLocator = By.xpath("//*[@title='User list']/[]");
     //user list locators:
     private By usersListLocator = By.id("id_l.U.usersList.usersList");
@@ -57,6 +58,10 @@ public class UsersPage {
 
     public String getPopupErrorMessage() {
         return wait.until(ExpectedConditions.elementToBeClickable(errorPopupLocator)).getText();
+    }
+
+    public void closeErrorTopPopup() {
+        wait.until(ExpectedConditions.elementToBeClickable(errorPopupClose)).click();
     }
 
     public User getCreatedUserInfo(User user) {
@@ -101,4 +106,5 @@ public class UsersPage {
         userInfoRow.findElement(deleteUserLocator).click();
         driver.switchTo().alert().accept();
     }
+
 }

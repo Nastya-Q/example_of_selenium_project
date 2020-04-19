@@ -1,9 +1,6 @@
 package application;
 
-import application.pages.LoginPage;
-import application.pages.NewUserForm;
-import application.pages.TopMenu;
-import application.pages.UsersPage;
+import application.pages.*;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -25,9 +22,10 @@ public class ApplicationManager {
     private String browser;
 
     public LoginPage loginPage;
-    public UsersPage usersPage;
+    public ManageUsersPage manageUsersPage;
     public NewUserForm newUserForm;
     public TopMenu topMenu;
+    public UserProfilePage userProfilePage;
 
     public ApplicationManager(String browser) {
         this.browser = browser;
@@ -44,9 +42,10 @@ public class ApplicationManager {
         }
         wait = new WebDriverWait(driver, 10);
         loginPage = new LoginPage(driver, wait);
-        usersPage = new UsersPage(driver, wait);
+        manageUsersPage = new ManageUsersPage(driver, wait);
         newUserForm = new NewUserForm(driver, wait);
         topMenu = new TopMenu(driver, wait);
+        userProfilePage = new UserProfilePage(driver, wait);
     }
 
     public void quit() {
@@ -58,7 +57,7 @@ public class ApplicationManager {
     }
 
     public void navigateToUsersPage() {
-        driver.get(properties.getProperty("web.baseUrl") + "users");
+        topMenu.openManageUsersPage();
     }
 
     public void loginAsRoot() {
