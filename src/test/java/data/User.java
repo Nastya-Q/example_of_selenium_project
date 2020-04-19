@@ -60,10 +60,23 @@ public class User {
     }
 
     @Override
+    public String toString() {
+        return "User{" +
+                "login='" + login + '\'' +
+                ", email='" + email + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", jabber='" + jabber + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
+//        if (user.getFullName() == null) {
+//            user.setFullName(user.getLogin()); //if user full name is not defined, then login name is used instead
+//        }
         return login.equals(user.login) &&
                 Objects.equals(email, user.email) &&
                 Objects.equals(fullName, user.fullName) &&

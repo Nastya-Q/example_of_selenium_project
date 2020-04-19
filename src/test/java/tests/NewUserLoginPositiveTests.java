@@ -15,15 +15,17 @@ public class NewUserLoginPositiveTests extends BaseTest{
         app.loginAsRoot();
     }
 
-    //checks that created user can login with login name
-    @Test
-    public void createUserAndLoginByLoginName() {
+    @DataProvider
+    public Object[] provideUserWithAllFields() {
         UserGenerator userGenerator = new UserGenerator();
         User user = userGenerator.generateUsersWithAllOptionalFields();
-        app.navigateToUsersPage();
-        app.manageUsersPage.openNewUserForm();
-        app.newUserForm.fillInUserCreationForm(user, false);
-        app.newUserForm.submitUserCreation();
+        return new Object[]{user};
+    }
+
+    //checks that created user can login with login name
+    @Test(dataProvider = "provideUserWithAllFields")
+    public void createUserAndLoginByLoginName(User user) {
+        createUser(user, false);
         String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName());
         app.topMenu.openDashboard(); //to not stay on user edit page
@@ -33,14 +35,9 @@ public class NewUserLoginPositiveTests extends BaseTest{
     }
 
     //checks that created user can login by email
-    @Test
-    public void createUserAndLoginByEmail() {
-        UserGenerator userGenerator = new UserGenerator();
-        User user = userGenerator.generateUsersWithAllOptionalFields();
-        app.navigateToUsersPage();
-        app.manageUsersPage.openNewUserForm();
-        app.newUserForm.fillInUserCreationForm(user, false);
-        app.newUserForm.submitUserCreation();
+    @Test(dataProvider = "provideUserWithAllFields")
+    public void createUserAndLoginByEmail(User user) {
+        createUser(user, false);
         String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName());
         app.topMenu.openDashboard(); //to not stay on user edit page
@@ -50,14 +47,9 @@ public class NewUserLoginPositiveTests extends BaseTest{
     }
 
     //checks that created user is forced to change password if this checkbox was enabled on user creation form
-    @Test
-    public void createUserAndLoginWithPwdToChange() {
-        UserGenerator userGenerator = new UserGenerator();
-        User user = userGenerator.generateUsersWithAllOptionalFields();
-        app.navigateToUsersPage();
-        app.manageUsersPage.openNewUserForm();
-        app.newUserForm.fillInUserCreationForm(user, true);
-        app.newUserForm.submitUserCreation();
+    @Test(dataProvider = "provideUserWithAllFields")
+    public void createUserAndLoginWithPwdToChange(User user) {
+        createUser(user, true);
         String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName());
         app.topMenu.openDashboard(); //to not stay on user edit page
@@ -67,8 +59,35 @@ public class NewUserLoginPositiveTests extends BaseTest{
         Assert.assertTrue(app.userProfilePage.isPwdChangeDialogShown());
     }
 
+    //check that user data used during creation match to actual user profile
+    @Test(dataProvider = "provideUserWithAllFields")
+    public void checkCreatedUserProfile(User user){
+        createUser(user, false);
+        String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
+        Assert.assertEquals(userNameFromUserEditPage, user.getFullName());
+        app.topMenu.openDashboard(); //to not stay on user edit page
+        app.logout();
+        app.loginPage.login(user.getEmail(), user.getPassword());
+        app.topMenu.openProfilePage();
+        //todo: update for missing full name
+        Assert.assertTrue(user.equals(app.userProfilePage.getUserProfileInfo()), "user info doesn't match");
+    }
+
+    private void createUser(User user, boolean forcePwdChange) {
+        app.navigateToUsersPage();
+        app.manageUsersPage.openNewUserForm();
+        app.newUserForm.fillInUserCreationForm(user, forcePwdChange);
+        app.newUserForm.submitUserCreation();
+    }
+
 //    @AfterMethod
-//    public void logout() {
-//        app.logout();
+//    // delete test user after each creation
+//    public void teardown(Object[] parameters) {
+//        User user = (User) parameters[0];
+//        app.loginAsRoot();
+//        app.navigateToUsersPage();
+//        app.manageUsersPage.deleteUserIfExist(user);
 //    }
+
+
 }

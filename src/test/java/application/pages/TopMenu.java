@@ -20,6 +20,7 @@ public class TopMenu {
     private By adminDropdownMenu = By.xpath("//div[@class='ring-menu__right']//*[contains(@data-ring-dropdown, 'Users')]");
     private By manageUsersMenuItem = By.xpath("//*[text()='Users']");
     private By logoutMenuItem = By.xpath("//*[text()='Log out']");
+    private By userProfileMenuItem = By.xpath("//*[text()='Profile']");
     private By dashboardLink = By.xpath("//*[@title='YouTrack Dashboard']");
 
     public void openDashboard() {
@@ -31,9 +32,13 @@ public class TopMenu {
         wait.until(ExpectedConditions.visibilityOfElementLocated(logoutMenuItem)).click();
     }
 
+    public void openProfilePage() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(userNameDropdownMenu)).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(userProfileMenuItem)).click();
+    }
+
     public String getUserNameFromMenuPanel() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(userNameDropdownMenu)).getText();
-//        return driver.findElement(userNameDropdownMenu).getText();
     }
 
     public void openManageUsersPage() {
