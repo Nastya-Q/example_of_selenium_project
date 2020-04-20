@@ -38,8 +38,14 @@ public class UserProfilePage {
         userProfileInfo.setFullName(driver.findElement(userProfileFullName).getAttribute("value"));
         userProfileInfo.setEmail(driver.findElement(userProfileEmail).getAttribute("value"));
         userProfileInfo.setJabber(driver.findElement(userProfileJabber).getAttribute("value"));
+        //to make User.equals() method working as null string != ""
+        if (userProfileInfo.getEmail().isEmpty()) {
+            userProfileInfo.setEmail(null);
+        }
+        if (userProfileInfo.getJabber().isEmpty()) {
+            userProfileInfo.setJabber(null);
+        }
         return userProfileInfo;
-
     }
 
 }

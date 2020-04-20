@@ -19,6 +19,7 @@ public class NewUserLoginPositiveTests extends BaseTest{
     public Object[] provideUserWithAllFields() {
         UserGenerator userGenerator = new UserGenerator();
         User user = userGenerator.generateUsersWithAllOptionalFields();
+//        User user = userGenerator.generateUserWithMandatoryFields();
         return new Object[]{user};
     }
 
@@ -26,6 +27,10 @@ public class NewUserLoginPositiveTests extends BaseTest{
     @Test(dataProvider = "provideUserWithAllFields")
     public void createUserAndLoginByLoginName(User user) {
         createUser(user, false);
+        // if user full name is empty, then login name is shown instead on all pages, so assigning login name to full name field before asserts
+        if (user.getFullName() == null) {
+            user.setFullName(user.getLogin());
+        }
         String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName());
         app.topMenu.openDashboard(); //to not stay on user edit page
@@ -38,6 +43,10 @@ public class NewUserLoginPositiveTests extends BaseTest{
     @Test(dataProvider = "provideUserWithAllFields")
     public void createUserAndLoginByEmail(User user) {
         createUser(user, false);
+        // if user full name is empty, then login name is shown instead on all pages, so assigning login name to full name field before asserts
+        if (user.getFullName() == null) {
+            user.setFullName(user.getLogin());
+        }
         String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName());
         app.topMenu.openDashboard(); //to not stay on user edit page
@@ -50,11 +59,15 @@ public class NewUserLoginPositiveTests extends BaseTest{
     @Test(dataProvider = "provideUserWithAllFields")
     public void createUserAndLoginWithPwdToChange(User user) {
         createUser(user, true);
+        // if user full name is empty, then login name is shown instead on all pages, so assigning login name to full name field before asserts
+        if (user.getFullName() == null) {
+            user.setFullName(user.getLogin());
+        }
         String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName());
         app.topMenu.openDashboard(); //to not stay on user edit page
         app.logout();
-        app.loginPage.login(user.getEmail(), user.getPassword());
+        app.loginPage.login(user.getLogin(), user.getPassword());
         Assert.assertEquals(CHANGE_PASSWORD_MSG, app.userProfilePage.getPopupNotificationText(), "change password message is not shown");
         Assert.assertTrue(app.userProfilePage.isPwdChangeDialogShown());
     }
@@ -63,14 +76,17 @@ public class NewUserLoginPositiveTests extends BaseTest{
     @Test(dataProvider = "provideUserWithAllFields")
     public void checkCreatedUserProfile(User user){
         createUser(user, false);
+        // if user full name is empty, then login name is shown instead on all pages, so assigning login name to full name field before asserts
+        if (user.getFullName() == null) {
+            user.setFullName(user.getLogin());
+        }
         String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName());
         app.topMenu.openDashboard(); //to not stay on user edit page
         app.logout();
-        app.loginPage.login(user.getEmail(), user.getPassword());
+        app.loginPage.login(user.getLogin(), user.getPassword());
         app.topMenu.openProfilePage();
-        //todo: update for missing full name
-        Assert.assertTrue(user.equals(app.userProfilePage.getUserProfileInfo()), "user info doesn't match");
+        Assert.assertEquals(app.userProfilePage.getUserProfileInfo(), user, "user info doesn't match");
     }
 
     private void createUser(User user, boolean forcePwdChange) {
@@ -80,6 +96,7 @@ public class NewUserLoginPositiveTests extends BaseTest{
         app.newUserForm.submitUserCreation();
     }
 
+    //todo: cleanup test data
 //    @AfterMethod
 //    // delete test user after each creation
 //    public void teardown(Object[] parameters) {
