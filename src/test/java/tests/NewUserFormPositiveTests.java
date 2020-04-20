@@ -51,20 +51,17 @@ public class NewUserFormPositiveTests extends BaseTest {
     @Test(dataProvider = "provideUsersWithMandatoryAndOptionalFields")
     public void createNewUser(User user) {
         createUser(user);
-        String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
-        // check created user name on edit page automatically opened after user creation
-        if (user.getFullName() != null) {
-            Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
-        } else {
-            Assert.assertEquals(userNameFromUserEditPage, user.getLogin(), "user name doesn't match");
+        // if user full name is empty, then login name is shown instead on all pages, so assigning login name to full name field before asserts
+        if (user.getFullName() == null) {
+            user.setFullName(user.getLogin());
         }
-        // find created used and check user info in the users list (login, full name, email/jabber)
+        // check created user name on edit page automatically opened after user creation
+        String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
+        Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
+        // find created user using search form and check his info in the users list (login, full name, email/jabber)
         app.navigateToUsersPage();
         Assert.assertTrue(app.manageUsersPage.isUserCreated(user));
         User createdUserInfo = app.manageUsersPage.getCreatedUserInfo(user);
-        if (user.getFullName() == null) {
-            user.setFullName(user.getLogin()); //if user full name is not defined, then in full name section login name is shown instead
-        }
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
     }
 
@@ -73,20 +70,17 @@ public class NewUserFormPositiveTests extends BaseTest {
     @Test(dataProvider = "provideOneUserWithAllFields")
     public void createUserWithSpecialSymbolsInFields(User user) {
         createUser(user);
-        String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
-        // check user name on edit page automatically opened after user creation
-        if (user.getFullName() != null) {
-            Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
-        } else {
-            Assert.assertEquals(userNameFromUserEditPage, user.getLogin(), "user name doesn't match");
+        // if user full name is empty, then login name is shown instead on all pages, so assigning login name to full name field before asserts
+        if (user.getFullName() == null) {
+            user.setFullName(user.getLogin());
         }
-        // find created used and check user info in the users list (login, full name, email/jabber)
+        // check created user name on edit page automatically opened after user creation
+        String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
+        Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
+        // find created user using search form and check his info in the users list (login, full name, email/jabber)
         app.navigateToUsersPage();
         Assert.assertTrue(app.manageUsersPage.isUserCreated(user));
         User createdUserInfo = app.manageUsersPage.getCreatedUserInfo(user);
-        if (user.getFullName() == null) {
-            user.setFullName(user.getLogin()); //if user full name is not defined, then in full name section login name is shown instead
-        }
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
     }
 
