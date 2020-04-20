@@ -26,6 +26,7 @@ public class ApplicationManager {
     public NewUserForm newUserForm;
     public TopMenu topMenu;
     public UserProfilePage userProfilePage;
+    public CommonElements commonElements;
 
     public ApplicationManager(String browser) {
         this.browser = browser;
@@ -46,6 +47,7 @@ public class ApplicationManager {
         newUserForm = new NewUserForm(driver, wait);
         topMenu = new TopMenu(driver, wait);
         userProfilePage = new UserProfilePage(driver, wait);
+        commonElements = new CommonElements(driver, wait);
     }
 
     public void quit() {
@@ -58,6 +60,10 @@ public class ApplicationManager {
 
     public void navigateToUsersPage() {
         topMenu.openManageUsersPage();
+    }
+
+    public void navigateToUsersPageViaDirectLink() {
+        driver.get(properties.getProperty("web.baseUrl") + "users");
     }
 
     public void loginAsRoot() {
