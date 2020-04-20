@@ -38,5 +38,19 @@ public class UserGenerator {
         user.setJabber(System.currentTimeMillis() + "user@jabber.org");
         return user;
     }
+    //user with 1 symbol in every field
+    public User generateUsersWithAllFieldsWithMinFieldLength(){
+        String chars = "qwertuiopasdfghjklzxcvbnm01233456789";
+        Random rnd = new Random();
+        String c = String.valueOf(chars.charAt(rnd.nextInt(chars.length())));
+        User user = new User();
+        user.setLogin(c);
+        user.setPassword(c);
+        user.setRepeatPassword(c);
+        user.setFullName(c);
+        user.setJabber(c);
+        user.setEmail(c);
+        return user;
+    }
 
 }
