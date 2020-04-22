@@ -18,7 +18,7 @@ public class NewUserLoginPositiveTests extends BaseTest{
     @DataProvider
     public Object[] provideUserWithAllFields() {
         UserGenerator userGenerator = new UserGenerator();
-        User user = userGenerator.generateUsersWithAllOptionalFields();
+        User user = userGenerator.generateUserWithAllOptionalFields();
 //        User user = userGenerator.generateUserWithMandatoryFields();
         return new Object[]{user};
     }

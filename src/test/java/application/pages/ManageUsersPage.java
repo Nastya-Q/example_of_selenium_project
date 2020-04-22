@@ -60,9 +60,21 @@ public class ManageUsersPage {
     }
 
 
-    public User getCreatedUserInfo(User user) {
+    public User getUserInfoForProvidedLogin(User user) {
+        return getUserInfoBy(user.getLogin());
+    }
+
+    public User getUserInfoForProvidedFullName(User user) {
+        return getUserInfoBy(user.getFullName());
+    }
+
+    public User getUserInfoForProvidedEmail(User user) {
+        return getUserInfoBy(user.getEmail());
+    }
+
+    private User getUserInfoBy(String userIdentificator) {
         userSearchField.clear();
-        userSearchField.sendKeys(user.getLogin());
+        userSearchField.sendKeys(userIdentificator);
         userSearchButton.click();
         // only for google chrome: wait until user list re-draws
         if (((RemoteWebDriver) driver).getCapabilities().getBrowserName().equalsIgnoreCase("chrome")) {
@@ -83,8 +95,20 @@ public class ManageUsersPage {
         return foundUser;
     }
 
-    public boolean isUserCreated(User user) {
-        userSearchField.sendKeys(user.getLogin());
+    public boolean isUserFoundByLogin(User user) {
+        return findUserBy(user.getLogin());
+    }
+
+    public boolean isUserFoundByEmail(User user) {
+        return findUserBy(user.getEmail());
+    }
+
+    public boolean isUserFoundByFullName(User user) {
+        return findUserBy(user.getFullName());
+    }
+
+    private boolean findUserBy(String userIdentificator) {
+        userSearchField.sendKeys(userIdentificator);
         userSearchButton.click();
         // only for google chrome: wait until user list re-draws
         if (((RemoteWebDriver) driver).getCapabilities().getBrowserName().equalsIgnoreCase("chrome")) {
@@ -95,7 +119,7 @@ public class ManageUsersPage {
     }
 
     public void deleteUserIfExist(User user) {
-        if (isUserCreated(user)) {
+        if (isUserFoundByLogin(user)) {
             WebElement userInfoRow = wait.until(ExpectedConditions.elementToBeClickable(userInfoRowLocator));
             userInfoRow.findElement(deleteUserLocator).click();
             driver.switchTo().alert().accept();

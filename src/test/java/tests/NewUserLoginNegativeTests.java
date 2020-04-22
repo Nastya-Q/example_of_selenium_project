@@ -20,7 +20,7 @@ public class NewUserLoginNegativeTests extends BaseTest{
     @DataProvider
     public Object[] provideUserWithAllFields() {
         UserGenerator userGenerator = new UserGenerator();
-        User user = userGenerator.generateUsersWithAllOptionalFields();
+        User user = userGenerator.generateUserWithAllOptionalFields();
         return new Object[]{user};
     }
 

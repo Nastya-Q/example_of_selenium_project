@@ -31,25 +31,66 @@ public class UserGenerator {
         return user;
     }
     //user with all optional fields
-    public User generateUsersWithAllOptionalFields(){
+    public User generateUserWithAllOptionalFields(){
         User user = generateUserWithMandatoryFields();
         user.setFullName("test full name" + System.currentTimeMillis());
         user.setEmail(System.currentTimeMillis() + "email@google.com");
         user.setJabber(System.currentTimeMillis() + "user@jabber.org");
         return user;
     }
-    //user with 1 symbol in every field
-    public User generateUsersWithAllFieldsWithMinFieldLength(){
+
+    //user with 1 symbol in every field except login
+    //why these except cases: to be able to find the user later by this field, as search by 1 symbol will return many other users
+    public User generateUsersWithMinFieldLengthExceptLogin(){
         String chars = "qwertuiopasdfghjklzxcvbnm01233456789";
         Random rnd = new Random();
         String c = String.valueOf(chars.charAt(rnd.nextInt(chars.length())));
-        User user = new User();
-        user.setLogin(c);
+        User user = generateUserWithMandatoryFields();
         user.setPassword(c);
         user.setRepeatPassword(c);
         user.setFullName(c);
         user.setJabber(c);
         user.setEmail(c);
+        return user;
+    }
+
+    //user with 1 symbol in every field except email
+    public User generateUsersWithMinFieldLengthExceptEmail(){
+        String chars = "qwertuiopasdfghjklzxcvbnm01233456789";
+        Random rnd = new Random();
+        String c = String.valueOf(chars.charAt(rnd.nextInt(chars.length())));
+        User user = generateUserWithEmail();
+        user.setLogin(c);
+        user.setPassword(c);
+        user.setRepeatPassword(c);
+        user.setFullName(c);
+        user.setJabber(c);
+        return user;
+    }
+
+    //user with 1 symbol in every field except email
+    public User generateUsersWithMinFieldLengthExceptFullName(){
+        String chars = "qwertuiopasdfghjklzxcvbnm01233456789";
+        Random rnd = new Random();
+        String c = String.valueOf(chars.charAt(rnd.nextInt(chars.length())));
+        User user = generateUserWithFullName();
+        user.setLogin(c);
+        user.setPassword(c);
+        user.setRepeatPassword(c);
+        user.setJabber(c);
+        user.setEmail(c);
+        return user;
+    }
+
+    //the following special symbols are allowed in all fields except for login: !±@#$%^&*()-_=+{}[];:\"'|\\<>,.?/~`;
+    public User generateUserWithSpecialSymbolsInAllFieldsExceptLogin(){
+        String specialSymbolsAddition = "!±@#$%^&*()-_=+{}[];:\"'|\\<>,.?/~`";
+        User user = generateUserWithMandatoryFields();
+        user.setPassword(specialSymbolsAddition);
+        user.setRepeatPassword(specialSymbolsAddition);
+        user.setFullName(specialSymbolsAddition);
+        user.setEmail(specialSymbolsAddition + "email@google.com");
+        user.setJabber(specialSymbolsAddition + "user@jabber.org");
         return user;
     }
 
