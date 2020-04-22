@@ -51,12 +51,6 @@ public class ManageUsersPage {
         wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.U.cr.createUserDialog")));
     }
 
-    public String getUserNameFromEditPage() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("id_l.E.AdminBreadcrumb.AdminBreadcrumb")));
-        return driver.findElement(By.id("id_l.E.AdminBreadcrumb.AdminBreadcrumb"))
-                .findElement(By.cssSelector("li:nth-child(2)")).getText();
-    }
-
     public String getPopupErrorMessage() {
         return wait.until(ExpectedConditions.elementToBeClickable(errorPopupLocator)).getText();
     }

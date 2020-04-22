@@ -123,7 +123,7 @@ public class NewUserFormNegativeTests extends BaseTest {
         // create user
         startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
-        String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
+        String userNameFromUserEditPage = app.editUserPage.getUserName();
         Assert.assertEquals(userNameFromUserEditPage, user.getLogin(), "user name doesn't match");
         //repeat the same user creation
         startNewUserCreation(user);

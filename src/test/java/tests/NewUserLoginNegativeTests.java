@@ -32,7 +32,7 @@ public class NewUserLoginNegativeTests extends BaseTest{
         if (user.getFullName() == null) {
             user.setFullName(user.getLogin());
         }
-        String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
+        String userNameFromUserEditPage = app.editUserPage.getUserName();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName());
         app.topMenu.openDashboard(); //to not stay on user edit page
         app.logout();
@@ -49,7 +49,7 @@ public class NewUserLoginNegativeTests extends BaseTest{
         if (user.getFullName() == null) {
             user.setFullName(user.getLogin());
         }
-        String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
+        String userNameFromUserEditPage = app.editUserPage.getUserName();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName());
         app.topMenu.openDashboard(); //to not stay on user edit page
         app.logout();

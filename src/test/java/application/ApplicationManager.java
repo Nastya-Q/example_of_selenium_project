@@ -27,6 +27,7 @@ public class ApplicationManager {
     public TopMenu topMenu;
     public UserProfilePage userProfilePage;
     public CommonElements commonElements;
+    public EditUserPage editUserPage;
 
     public ApplicationManager(String browser) {
         this.browser = browser;
@@ -48,6 +49,7 @@ public class ApplicationManager {
         topMenu = new TopMenu(driver, wait);
         userProfilePage = new UserProfilePage(driver, wait);
         commonElements = new CommonElements(driver, wait);
+        editUserPage = new EditUserPage(driver, wait);
     }
 
     public void quit() {

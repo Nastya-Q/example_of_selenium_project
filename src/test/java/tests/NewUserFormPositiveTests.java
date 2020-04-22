@@ -56,7 +56,7 @@ public class NewUserFormPositiveTests extends BaseTest {
             user.setFullName(user.getLogin());
         }
         // check created user name on edit page automatically opened after user creation
-        String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
+        String userNameFromUserEditPage = app.editUserPage.getUserName();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
         // find created user using search form and check his info in the users list (login, full name, email/jabber)
         app.navigateToUsersPage();
@@ -75,7 +75,7 @@ public class NewUserFormPositiveTests extends BaseTest {
             user.setFullName(user.getLogin());
         }
         // check created user name on edit page automatically opened after user creation
-        String userNameFromUserEditPage = app.manageUsersPage.getUserNameFromEditPage();
+        String userNameFromUserEditPage = app.editUserPage.getUserName();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
         // find created user using search form and check his info in the users list (login, full name, email/jabber)
         app.navigateToUsersPage();
