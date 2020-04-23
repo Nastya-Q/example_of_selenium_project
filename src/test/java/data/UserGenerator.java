@@ -3,6 +3,8 @@ package data;
 import java.util.Random;
 
 public class UserGenerator {
+    private static final int MIN_KEYFIELD_LENGTH = 1;
+
     //user with mandatory fields only
     public User generateUserWithMandatoryFields() {
         Random rand = new Random();
@@ -46,43 +48,23 @@ public class UserGenerator {
     //user with 1 symbol in every field except login
     //why these except cases: to be able to find the user later by this field, as search by 1 symbol will return many other users
     public User generateUsersWithMinFieldLengthExceptLogin() {
-        String chars = "qwertuiopasdfghjklzxcvbnm01233456789";
-        Random rnd = new Random();
-        String c = String.valueOf(chars.charAt(rnd.nextInt(chars.length())));
-        User user = generateUserWithMandatoryFields();
-        user.setPassword(c);
-        user.setRepeatPassword(c);
-        user.setFullName(c);
-        user.setJabber(c);
-        user.setEmail(c);
+        Random rand = new Random();
+        User user = generateUserWithAllFieldsOfLength(MIN_KEYFIELD_LENGTH);
+        user.setLogin(String.format("login-%s_%s", rand.nextInt(500), System.currentTimeMillis()));
         return user;
     }
 
     //user with 1 symbol in every field except email
     public User generateUsersWithMinFieldLengthExceptEmail() {
-        String chars = "qwertuiopasdfghjklzxcvbnm01233456789";
-        Random rnd = new Random();
-        String c = String.valueOf(chars.charAt(rnd.nextInt(chars.length())));
-        User user = generateUserWithEmail();
-        user.setLogin(c);
-        user.setPassword(c);
-        user.setRepeatPassword(c);
-        user.setFullName(c);
-        user.setJabber(c);
+        User user = generateUserWithAllFieldsOfLength(MIN_KEYFIELD_LENGTH);
+        user.setEmail(System.currentTimeMillis() + "email@google.com");
         return user;
     }
 
     //user with 1 symbol in every field except email
     public User generateUsersWithMinFieldLengthExceptFullName() {
-        String chars = "qwertuiopasdfghjklzxcvbnm01233456789";
-        Random rnd = new Random();
-        String c = String.valueOf(chars.charAt(rnd.nextInt(chars.length())));
-        User user = generateUserWithFullName();
-        user.setLogin(c);
-        user.setPassword(c);
-        user.setRepeatPassword(c);
-        user.setJabber(c);
-        user.setEmail(c);
+        User user = generateUserWithAllFieldsOfLength(MIN_KEYFIELD_LENGTH);
+        user.setFullName("test full name" + System.currentTimeMillis());
         return user;
     }
 
@@ -112,10 +94,10 @@ public class UserGenerator {
 
     private String generateRandomStringOfLenght(int length) {
         String chars = "qwertuiopasdfghjklzxcvbnm01233456789";
-        Random rnd = new Random();
+        Random rand = new Random();
         String generatedString = "";
         while (generatedString.length() < length) {
-            generatedString = generatedString + chars.charAt(rnd.nextInt(chars.length()));
+            generatedString = generatedString + chars.charAt(rand.nextInt(chars.length()));
         }
         return generatedString;
     }
