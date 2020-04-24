@@ -20,6 +20,13 @@ public class NewUserFormPositiveTests extends BaseTest {
     }
 
     @DataProvider
+    public Object[] provideUserWithMandatoryFields() {
+        UserGenerator userGenerator = new UserGenerator();
+        User user = userGenerator.generateUserWithMandatoryFields();
+        return new Object[]{user};
+    }
+
+    @DataProvider
     public Iterator<Object[]> provideUsersWithMandatoryAndOptionalFields() {
         List<User> users = new ArrayList<>();
         UserGenerator userGenerator = new UserGenerator();
@@ -138,15 +145,15 @@ public class NewUserFormPositiveTests extends BaseTest {
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
     }
 
-
-    //todo: think about this test
     //check that user is not created when clicking Cancel on New User Form
-//    @Test(dataProvider = "provideUserWithMandatoryFields")
-//    public void cancelUserCreation(User user) {
-//        startNewUserCreation(user);
-//        app.newUserForm.cancelUserCreation();
-//        Assert.assertFalse(app.manageUsersPage.isUserCreated(user));
-//    }
+    @Test(dataProvider = "provideUserWithMandatoryFields")
+    public void cancelUserCreation(User user) {
+        app.navigateToUsersPage();
+        app.manageUsersPage.openNewUserForm();
+        app.newUserForm.fillInUserCreationForm(user, false);
+        app.newUserForm.cancelUserCreation();
+        Assert.assertFalse(app.manageUsersPage.isUserFoundByLogin(user));
+    }
 
     private void createUser(User user) {
         app.navigateToUsersPage();
