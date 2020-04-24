@@ -33,7 +33,6 @@ public class NewUserFormPositiveTests extends BaseTest {
 
     @DataProvider
     public Object[] provideUserWithSpecialSymbols() {
-        List<User> users = new ArrayList<>();
         UserGenerator userGenerator = new UserGenerator();
         User user = userGenerator.generateUserWithSpecialSymbolsInAllFieldsExceptLogin();
         return new Object[]{user};
@@ -46,6 +45,15 @@ public class NewUserFormPositiveTests extends BaseTest {
         users.add(userGenerator.generateUsersWithMinFieldLengthExceptLogin());
         users.add(userGenerator.generateUsersWithMinFieldLengthExceptFullName());
         users.add(userGenerator.generateUsersWithMinFieldLengthExceptEmail());
+        return users.stream().map((g) -> new Object[]{g}).collect(Collectors.toList()).iterator();
+    }
+
+    @DataProvider
+    public Iterator<Object[]> provideUsersWithMaxAndMoreFieldsLength() {
+        List<User> users = new ArrayList<>();
+        UserGenerator userGenerator = new UserGenerator();
+        users.add(userGenerator.generateUsersWithMaxFieldsLength());
+        users.add(userGenerator.generateUsersWithMoreThanMaxFieldsLength());
         return users.stream().map((g) -> new Object[]{g}).collect(Collectors.toList()).iterator();
     }
 
@@ -75,10 +83,6 @@ public class NewUserFormPositiveTests extends BaseTest {
     @Test(dataProvider = "provideUserWithSpecialSymbols")
     public void createUserWithSpecialSymbols(User user) {
         createUser(user);
-        // if user full name is empty, then login name is shown instead on all pages, so assigning login name to full name field before asserts
-        if (user.getFullName() == null) {
-            user.setFullName(user.getLogin());
-        }
         // check created user name on edit page automatically opened after user creation
         String userNameFromUserEditPage = app.editUserPage.getUserName();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
@@ -89,15 +93,10 @@ public class NewUserFormPositiveTests extends BaseTest {
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
     }
 
-    /* edge case test:
-    tests for min fields length: except login, email, full name 1 by 1 to be able to find unique user*/
+    //edge case: creates user with min fields length (=1 symbol)
     @Test(dataProvider = "provideUsersWithMinFieldsLength")
     public void createUserWithMinFieldsLength(User user) {
         createUser(user);
-        // if user full name is empty, then login name is shown instead on all pages, so assigning login name to full name field before asserts
-        if (user.getFullName() == null) {
-            user.setFullName(user.getLogin());
-        }
         // check created user name on edit page automatically opened after user creation
         String userNameFromUserEditPage = app.editUserPage.getUserName();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
@@ -119,6 +118,24 @@ public class NewUserFormPositiveTests extends BaseTest {
             User createdUserInfo = app.manageUsersPage.getUserInfoForProvidedFullName(user);
             Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
         }
+    }
+
+    //edge case: create user with max allowed login/full name fields (=50 symbols) and more than max (>50)
+    @Test(dataProvider = "provideUsersWithMaxAndMoreFieldsLength")
+    public void createUserWithMaxFieldsLength(User user) {
+        int maxFieldLenght = 50;
+        createUser(user);
+        //prepare user for comparison: truncate login/email to 50 symbols as they will be truncated on UI
+        user.setLogin(user.getLogin().substring(0, maxFieldLenght));
+        user.setFullName(user.getFullName().substring(0, maxFieldLenght));
+        // check created user name on edit page automatically opened after user creation
+        String userNameFromUserEditPage = app.editUserPage.getUserName();
+        Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
+        // find created user using search form and check his info in the users list (login, full name, email/jabber)
+        app.navigateToUsersPage();
+        Assert.assertTrue(app.manageUsersPage.isUserFoundByLogin(user));
+        User createdUserInfo = app.manageUsersPage.getUserInfoForProvidedLogin(user);
+        Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
     }
 
 

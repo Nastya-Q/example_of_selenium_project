@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class UserGenerator {
     private static final int MIN_KEYFIELD_LENGTH = 1;
+    private static final int MAX_KEYFIELD_LENGTH = 50;
 
     //user with mandatory fields only
     public User generateUserWithMandatoryFields() {
@@ -80,8 +81,18 @@ public class UserGenerator {
         return user;
     }
 
+    //generates user with each field = 50 symbols (this is max for login/full name)
+    public User generateUsersWithMaxFieldsLength() {
+        return generateUserWithAllFieldsOfLength(MAX_KEYFIELD_LENGTH);
+    }
+
+    //generates user with more than max fields length ( >50 symbols)
+    public User generateUsersWithMoreThanMaxFieldsLength() {
+        return generateUserWithAllFieldsOfLength(MAX_KEYFIELD_LENGTH*2);
+    }
+
     // provides user with fields of defined length
-    public User generateUserWithAllFieldsOfLength(int fieldsLength) {
+    private User generateUserWithAllFieldsOfLength(int fieldsLength) {
         User user = new User();
         user.setLogin(generateRandomStringOfLenght(fieldsLength));
         user.setPassword(generateRandomStringOfLenght(fieldsLength));
@@ -95,11 +106,11 @@ public class UserGenerator {
     private String generateRandomStringOfLenght(int length) {
         String chars = "qwertuiopasdfghjklzxcvbnm01233456789";
         Random rand = new Random();
-        String generatedString = "";
+        StringBuilder generatedString = new StringBuilder();
         while (generatedString.length() < length) {
-            generatedString = generatedString + chars.charAt(rand.nextInt(chars.length()));
+            generatedString.append(chars.charAt(rand.nextInt(chars.length())));
         }
-        return generatedString;
+        return generatedString.toString();
     }
 
 }
