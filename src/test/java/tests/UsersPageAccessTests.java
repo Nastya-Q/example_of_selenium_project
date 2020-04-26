@@ -1,18 +1,31 @@
 package tests;
 
+import data.User;
+import data.UserGenerator;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class UsersPageAccessTests extends BaseTest{
     private final String NO_PAGE_PERMISSION_MSG = "You have no permissions to view this page";
+    User nonAdminUser;
 
-    //todo: create test user without permissions before test
+    @BeforeMethod
+    public void createUserWithoutPermissions() {
+        UserGenerator userGenerator = new UserGenerator();
+        nonAdminUser = userGenerator.generateUserWithMandatoryFields();
+        app.loginAsRoot();
+        app.navigateToUsersPage();
+        app.manageUsersPage.openNewUserForm();
+        app.newUserForm.fillInUserCreationForm(nonAdminUser, false);
+        app.newUserForm.submitUserCreation();
+    }
 
     //not permitted user cannot access "Create Users" page
     @Test
     public void tryToAccessCreatePageWithoutPermission() {
         app.navigateToLoginPage();
-        app.loginPage.login("test12", "test1");
+        app.loginPage.login(nonAdminUser.getLogin(), nonAdminUser.getPassword());
         app.navigateToUsersPageViaDirectLink();
         Assert.assertEquals(NO_PAGE_PERMISSION_MSG, app.commonElements.getErrorPageMessage());
     }
