@@ -3,10 +3,7 @@ package tests;
 import data.User;
 import data.UserGenerator;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,6 +49,15 @@ public class NewUserFormNegativeTests extends BaseTest {
         User userWithRightAngleBracket = userGenerator.generateUserWithMandatoryFields();
         userWithRightAngleBracket.setLogin("with>");
         users.add(userWithRightAngleBracket);
+        return users.stream().map((g) -> new Object[]{g}).collect(Collectors.toList()).iterator();
+    }
+
+    @DataProvider
+    public Iterator<Object[]> provideUsersWithInvalidEmailAndJabber() {
+        List<User> users = new ArrayList<>();
+        UserGenerator userGenerator = new UserGenerator();
+        users.add(userGenerator.generateUserWithInvalidEmailFormat());
+        users.add(userGenerator.generateUserWithInvalidJabberFormat());
         return users.stream().map((g) -> new Object[]{g}).collect(Collectors.toList()).iterator();
     }
 
@@ -132,15 +138,21 @@ public class NewUserFormNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, DUPLICATE_USERLOGIN_MSG, "error message doesn't match!");
     }
 
-    private void startNewUserCreation(User user) {
-        app.navigateToUsersPage();
-        app.manageUsersPage.openNewUserForm();
-        app.newUserForm.fillInUserCreationForm(user, false);
+    //email/jabber formats should be validated, but they are not, so test expectedly fails:
+    @Test(dataProvider = "provideUsersWithInvalidEmailAndJabber")
+    public void createUserWithWrongEmailOrJabber(User user) {
+        //try to create user
+        startNewUserCreation(user);
+        app.newUserForm.submitUserCreation();
+        //check that users with invalid email/jabber  weren't created:
+        app.navigateToUsersPageViaDirectLink();
+        Assert.assertFalse(app.manageUsersPage.isUserFoundByLogin(user), "user with invalid email or jabber was created!");
     }
 
-    @AfterMethod
-    public void closeNewUserForm(){
-        app.newUserForm.cancelUserCreation();
+    private void startNewUserCreation(User user) {
+        app.navigateToUsersPageViaDirectLink();
+        app.manageUsersPage.openNewUserForm();
+        app.newUserForm.fillInUserCreationForm(user, false);
     }
 
 }

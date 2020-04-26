@@ -103,6 +103,20 @@ public class UserGenerator {
         return user;
     }
 
+    //email != Username@domain.extension
+    public User generateUserWithInvalidEmailFormat() {
+        User user = generateUserWithMandatoryFields();
+        user.setEmail(System.currentTimeMillis() + "test");
+        return user;
+    }
+
+    //jabber != Username@domain.extension
+    public User generateUserWithInvalidJabberFormat() {
+        User user = generateUserWithMandatoryFields();
+        user.setJabber(System.currentTimeMillis() + "test");
+        return user;
+    }
+
     private String generateRandomStringOfLenght(int length) {
         String chars = "qwertuiopasdfghjklzxcvbnm01233456789";
         Random rand = new Random();
