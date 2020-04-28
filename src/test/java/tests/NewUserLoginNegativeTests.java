@@ -3,77 +3,49 @@ package tests;
 import data.User;
 import data.UserGenerator;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
-public class NewUserLoginNegativeTests extends BaseTest{
+public class NewUserLoginNegativeTests extends BaseTest {
 
     //expected notifications
     private final String WRONG_LOGINDATA_MSG = "The username, email or password you entered is incorrect";
 
-    @BeforeMethod
-    public void login() {
-        app.loginAsRoot();
-    }
+    private User createdUser;
 
-    @DataProvider
-    public Object[] provideUserWithAllFields() {
+    @BeforeClass
+    public void createUserWithoutPermissions() {
         UserGenerator userGenerator = new UserGenerator();
-        User user = userGenerator.generateUserWithAllOptionalFields();
-        return new Object[]{user};
+        createdUser = userGenerator.generateUserWithAllOptionalFields();
+        app.loginAsRoot();
+        app.navigateToUsersPageViaMenu();
+        app.manageUsersPage.openNewUserForm();
+        app.newUserForm.fillInUserCreationForm(createdUser, false);
+        app.newUserForm.submitUserCreation();
     }
 
     //checks that created user cannot login with correct login and wrong password
-    @Test(dataProvider = "provideUserWithAllFields")
-    public void createUserAndLoginByLoginNameWithWrongPwd(User user) {
-        createUser(user, false);
-        // if user full name is empty, then login name is shown instead on all pages, so assigning login name to full name field before asserts
-        if (user.getFullName() == null) {
-            user.setFullName(user.getLogin());
-        }
-        String userNameFromUserEditPage = app.editUserPage.getUserName();
-        Assert.assertEquals(userNameFromUserEditPage, user.getFullName());
-        app.topMenu.openDashboard(); //to not stay on user edit page
-        app.logout();
-        user.setPassword(user.getPassword()+"wrongpassword");
-        app.loginPage.login(user.getLogin(), user.getPassword());
+    @Test
+    public void loginByLoginNameWithWrongPwd() {
+        app.navigateToLoginPage();
+        createdUser.setPassword(createdUser.getPassword() + "wrongpassword");
+        app.loginPage.login(createdUser.getLogin(), createdUser.getPassword());
         Assert.assertEquals(WRONG_LOGINDATA_MSG, app.loginPage.getLoginErrorHint());
     }
 
     //checks that created user cannot login with correct email and wrong password
-    @Test(dataProvider = "provideUserWithAllFields")
-    public void createUserAndLoginByEmailWithWrongPwd(User user) {
-        createUser(user, false);
-        // if user full name is empty, then login name is shown instead on all pages, so assigning login name to full name field before asserts
-        if (user.getFullName() == null) {
-            user.setFullName(user.getLogin());
-        }
-        String userNameFromUserEditPage = app.editUserPage.getUserName();
-        Assert.assertEquals(userNameFromUserEditPage, user.getFullName());
-        app.topMenu.openDashboard(); //to not stay on user edit page
-        app.logout();
-        user.setPassword(user.getPassword()+"wrongpassword");
-        app.loginPage.login(user.getEmail(), user.getPassword());
+    @Test
+    public void loginByEmailWithWrongPwd() {
+        app.navigateToLoginPage();
+        createdUser.setPassword(createdUser.getPassword() + "wrongpassword");
+        app.loginPage.login(createdUser.getEmail(), createdUser.getPassword());
         Assert.assertEquals(WRONG_LOGINDATA_MSG, app.loginPage.getLoginErrorHint());
     }
 
-    private void createUser(User user, boolean forcePwdChange) {
-        app.navigateToUsersPageViaMenu();
-        app.manageUsersPage.openNewUserForm();
-        app.newUserForm.fillInUserCreationForm(user, forcePwdChange);
-        app.newUserForm.submitUserCreation();
+    @AfterClass
+    public void removeCreatedUser() {
+        app.loginAsRoot();
+        app.navigateToUsersPage();
+        app.manageUsersPage.deleteUserIfExist(createdUser);
     }
-
-    //todo: cleanup test data
-//    @AfterMethod
-//    // delete test user after each creation
-//    public void teardown(Object[] parameters) {
-//        User user = (User) parameters[0];
-//        app.loginAsRoot();
-//        app.navigateToUsersPage();
-//        app.manageUsersPage.deleteUserIfExist(user);
-//    }
-
 
 }

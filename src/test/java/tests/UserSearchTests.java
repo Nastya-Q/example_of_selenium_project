@@ -20,7 +20,6 @@ public class UserSearchTests extends BaseTest {
         app.manageUsersPage.openNewUserForm();
         app.newUserForm.fillInUserCreationForm(createdUser, false);
         app.newUserForm.submitUserCreation();
-        System.out.println(createdUser.toString());
     }
 
     //checks that created user can be found by login name and it's info matches with created user
