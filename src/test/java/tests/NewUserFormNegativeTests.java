@@ -145,12 +145,12 @@ public class NewUserFormNegativeTests extends BaseTest {
         startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
         //check that users with invalid email/jabber  weren't created:
-        app.navigateToUsersPageViaDirectLink();
+        app.navigateToUsersPage();
         Assert.assertFalse(app.manageUsersPage.isUserFoundByLogin(user), "user with invalid email or jabber was created!");
     }
 
     private void startNewUserCreation(User user) {
-        app.navigateToUsersPageViaDirectLink();
+        app.navigateToUsersPage();
         app.manageUsersPage.openNewUserForm();
         app.newUserForm.fillInUserCreationForm(user, false);
     }

@@ -90,7 +90,7 @@ public class NewUserLoginPositiveTests extends BaseTest{
     }
 
     private void createUser(User user, boolean forcePwdChange) {
-        app.navigateToUsersPage();
+        app.navigateToUsersPageViaMenu();
         app.manageUsersPage.openNewUserForm();
         app.newUserForm.fillInUserCreationForm(user, forcePwdChange);
         app.newUserForm.submitUserCreation();

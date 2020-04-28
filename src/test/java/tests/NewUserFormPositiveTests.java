@@ -78,7 +78,7 @@ public class NewUserFormPositiveTests extends BaseTest {
         String userNameFromUserEditPage = app.editUserPage.getUserName();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
         // find created user using search form and check his info in the users list (login, full name, email/jabber)
-        app.navigateToUsersPage();
+        app.navigateToUsersPageViaMenu();
         Assert.assertTrue(app.manageUsersPage.isUserFoundByLogin(user));
         User createdUserInfo = app.manageUsersPage.getUserInfoForProvidedLogin(user);
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
@@ -94,7 +94,7 @@ public class NewUserFormPositiveTests extends BaseTest {
         String userNameFromUserEditPage = app.editUserPage.getUserName();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
         // find created user using search form and check his info in the users list (login, full name, email/jabber)
-        app.navigateToUsersPage();
+        app.navigateToUsersPageViaMenu();
         Assert.assertTrue(app.manageUsersPage.isUserFoundByLogin(user));
         User createdUserInfo = app.manageUsersPage.getUserInfoForProvidedLogin(user);
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
@@ -108,7 +108,7 @@ public class NewUserFormPositiveTests extends BaseTest {
         String userNameFromUserEditPage = app.editUserPage.getUserName();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
         // find created user using search form and check his info in the users list (login, full name, email/jabber)
-        app.navigateToUsersPage();
+        app.navigateToUsersPageViaMenu();
         //search by non 1 symbol field to provide search result uniqueness
         if (user.getLogin().length() > 1) {
             Assert.assertTrue(app.manageUsersPage.isUserFoundByLogin(user));
@@ -139,7 +139,7 @@ public class NewUserFormPositiveTests extends BaseTest {
         String userNameFromUserEditPage = app.editUserPage.getUserName();
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
         // find created user using search form and check his info in the users list (login, full name, email/jabber)
-        app.navigateToUsersPage();
+        app.navigateToUsersPageViaMenu();
         Assert.assertTrue(app.manageUsersPage.isUserFoundByLogin(user));
         User createdUserInfo = app.manageUsersPage.getUserInfoForProvidedLogin(user);
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
@@ -148,7 +148,7 @@ public class NewUserFormPositiveTests extends BaseTest {
     //check that user is not created when clicking Cancel on New User Form
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void cancelUserCreation(User user) {
-        app.navigateToUsersPage();
+        app.navigateToUsersPageViaMenu();
         app.manageUsersPage.openNewUserForm();
         app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.cancelUserCreation();
@@ -156,7 +156,7 @@ public class NewUserFormPositiveTests extends BaseTest {
     }
 
     private void createUser(User user) {
-        app.navigateToUsersPage();
+        app.navigateToUsersPageViaMenu();
         app.manageUsersPage.openNewUserForm();
         app.newUserForm.fillInUserCreationForm(user, false);
         app.newUserForm.submitUserCreation();

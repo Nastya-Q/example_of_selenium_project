@@ -60,11 +60,11 @@ public class ApplicationManager {
         driver.get(properties.getProperty("web.baseUrl") + "login");
     }
 
-    public void navigateToUsersPage() {
+    public void navigateToUsersPageViaMenu() {
         topMenu.openManageUsersPage();
     }
 
-    public void navigateToUsersPageViaDirectLink() {
+    public void navigateToUsersPage() {
         driver.get(properties.getProperty("web.baseUrl") + "users");
     }
 

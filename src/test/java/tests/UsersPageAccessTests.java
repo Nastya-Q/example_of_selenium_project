@@ -8,14 +8,14 @@ import org.testng.annotations.Test;
 
 public class UsersPageAccessTests extends BaseTest{
     private final String NO_PAGE_PERMISSION_MSG = "You have no permissions to view this page";
-    User nonAdminUser;
+    private User nonAdminUser;
 
     @BeforeMethod
     public void createUserWithoutPermissions() {
         UserGenerator userGenerator = new UserGenerator();
         nonAdminUser = userGenerator.generateUserWithMandatoryFields();
         app.loginAsRoot();
-        app.navigateToUsersPage();
+        app.navigateToUsersPageViaMenu();
         app.manageUsersPage.openNewUserForm();
         app.newUserForm.fillInUserCreationForm(nonAdminUser, false);
         app.newUserForm.submitUserCreation();
@@ -26,7 +26,7 @@ public class UsersPageAccessTests extends BaseTest{
     public void tryToAccessCreatePageWithoutPermission() {
         app.navigateToLoginPage();
         app.loginPage.login(nonAdminUser.getLogin(), nonAdminUser.getPassword());
-        app.navigateToUsersPageViaDirectLink();
+        app.navigateToUsersPage();
         Assert.assertEquals(NO_PAGE_PERMISSION_MSG, app.commonElements.getErrorPageMessage());
     }
 }
