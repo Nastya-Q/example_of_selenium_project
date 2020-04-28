@@ -72,7 +72,7 @@ public class ManageUsersPage {
         return getUserInfoBy(user.getEmail());
     }
 
-    private User getUserInfoBy(String userIdentificator) {
+    public User getUserInfoBy(String userIdentificator) {
         userSearchField.clear();
         userSearchField.sendKeys(userIdentificator);
         userSearchButton.click();
@@ -96,18 +96,18 @@ public class ManageUsersPage {
     }
 
     public boolean isUserFoundByLogin(User user) {
-        return findUserBy(user.getLogin());
+        return isUserFoundByString(user.getLogin());
     }
 
     public boolean isUserFoundByEmail(User user) {
-        return findUserBy(user.getEmail());
+        return isUserFoundByString(user.getEmail());
     }
 
     public boolean isUserFoundByFullName(User user) {
-        return findUserBy(user.getFullName());
+        return isUserFoundByString(user.getFullName());
     }
 
-    private boolean findUserBy(String userIdentificator) {
+    public boolean isUserFoundByString(String userIdentificator) {
         userSearchField.sendKeys(userIdentificator);
         userSearchButton.click();
         // only for google chrome: wait until user list re-draws
