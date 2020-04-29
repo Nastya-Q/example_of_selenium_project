@@ -18,8 +18,9 @@ public class UserGenerator {
 
     //user with optional field: full name
     public User generateUserWithFullName() {
+        Random rand = new Random();
         User user = generateUserWithMandatoryFields();
-        user.setFullName("test full name" + System.currentTimeMillis());
+        user.setFullName("firstname" + rand.nextInt(500) + " secondname" + System.currentTimeMillis());
         return user;
     }
 
@@ -39,8 +40,9 @@ public class UserGenerator {
 
     //user with all optional fields
     public User generateUserWithAllOptionalFields() {
+        Random rand = new Random();
         User user = generateUserWithMandatoryFields();
-        user.setFullName("test full name" + System.currentTimeMillis());
+        user.setFullName("firstname" + rand.nextInt(500) + " secondname" + System.currentTimeMillis());
         user.setEmail(System.currentTimeMillis() + "email@google.com");
         user.setJabber(System.currentTimeMillis() + "user@jabber.org");
         return user;

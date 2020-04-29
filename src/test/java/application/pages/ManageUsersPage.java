@@ -108,6 +108,7 @@ public class ManageUsersPage {
     }
 
     public boolean isUserFoundByString(String userIdentificator) {
+        userSearchField.clear();
         userSearchField.sendKeys(userIdentificator);
         userSearchButton.click();
         // only for google chrome: wait until user list re-draws
