@@ -5,6 +5,10 @@
         <classes>
             <class name="tests.NewUserFormPositiveTests"/>
             <class name="tests.NewUserFormNegativeTests"/>
+            <class name="tests.NewUserLoginPositiveTests"/>
+            <class name="tests.NewUserLoginNegativeTests"/>
+            <class name="tests.SearchOfCreatedUserTests"/>
+            <class name="tests.UsersPageAccessTests"/>
         </classes>
     </test>
 </suite>

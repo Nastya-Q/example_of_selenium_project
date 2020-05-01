@@ -162,7 +162,7 @@ public class NewUserFormNegativeTests extends BaseTest {
     case 2: jabber with wrong format jabber != Username@domain.extension, e.g. "34757476testjabber"
      */
     @Test(dataProvider = "provideUsersWithInvalidEmailAndJabberFormat")
-    public void createUserWithWrongEmailOrJabber(User user) {
+    public void createUserWithWrongEmailOrJabberFormat(User user) {
         //try to create user
         startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
