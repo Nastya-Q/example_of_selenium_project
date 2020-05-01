@@ -53,7 +53,7 @@ public class NewUserFormNegativeTests extends BaseTest {
     }
 
     @DataProvider
-    public Iterator<Object[]> provideUsersWithInvalidEmailAndJabber() {
+    public Iterator<Object[]> provideUsersWithInvalidEmailAndJabberFormat() {
         List<User> users = new ArrayList<>();
         UserGenerator userGenerator = new UserGenerator();
         users.add(userGenerator.generateUserWithInvalidEmailFormat());
@@ -61,7 +61,18 @@ public class NewUserFormNegativeTests extends BaseTest {
         return users.stream().map((g) -> new Object[]{g}).collect(Collectors.toList()).iterator();
     }
 
-
+    @DataProvider
+    public Iterator<Object[]> provideUsersWithSpaceInEmailAndJabber() {
+        List<User> users = new ArrayList<>();
+        UserGenerator userGenerator = new UserGenerator();
+        User userWithSpaceInEmail = userGenerator.generateUserWithMandatoryFields();
+        userWithSpaceInEmail.setEmail("test name@gmail.com");
+        User userWithSpaceInJabber = userGenerator.generateUserWithMandatoryFields();
+        userWithSpaceInJabber.setJabber("test name@jabber.com");
+        users.add(userWithSpaceInEmail);
+        users.add(userWithSpaceInJabber);
+        return users.stream().map((g) -> new Object[]{g}).collect(Collectors.toList()).iterator();
+    }
 
 
     //EMPTY MANDATORY FIELDS TESTS
@@ -141,8 +152,11 @@ public class NewUserFormNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, DUPLICATE_USERLOGIN_MSG, "error message doesn't match!");
     }
 
-    //email/jabber formats should be validated, but they are not, so test expectedly fails:
-    @Test(dataProvider = "provideUsersWithInvalidEmailAndJabber")
+    //todo: duplicated email:
+
+
+    //email/jabber formats should be validated, but they are not, so test expectedly FAILS!
+    @Test(dataProvider = "provideUsersWithInvalidEmailAndJabberFormat")
     public void createUserWithWrongEmailOrJabber(User user) {
         //try to create user
         startNewUserCreation(user);
@@ -152,7 +166,19 @@ public class NewUserFormNegativeTests extends BaseTest {
         Assert.assertFalse(app.manageUsersPage.isUserFoundByLogin(user), "user with invalid email or jabber was created!");
     }
 
-    // email/jabber contain space
+    //user email/jabber contains space - FAILS!
+    //case 1: email with space, e.g. "test name@gmail.com"
+    //case 2: jabber with space "test name@jabber.com"
+    @Test(dataProvider = "provideUsersWithSpaceInEmailAndJabber")
+    public void createUserWithSpaceIEmailOrJabber(User user) {
+        //try to create user
+        startNewUserCreation(user);
+        app.newUserForm.submitUserCreation();
+        //check that users with invalid email/jabber  weren't created:
+        app.navigateToUsersPage();
+        Assert.assertFalse(app.manageUsersPage.isUserFoundByLogin(user), "user with space in email or jabber was created!");
+    }
+
 
     private void startNewUserCreation(User user) {
         app.navigateToUsersPage();
