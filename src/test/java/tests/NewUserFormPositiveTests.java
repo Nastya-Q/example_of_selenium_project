@@ -41,7 +41,7 @@ public class NewUserFormPositiveTests extends BaseTest {
     @DataProvider
     public Object[] provideUserWithSpecialSymbols() {
         UserGenerator userGenerator = new UserGenerator();
-        User user = userGenerator.generateUserWithSpecialSymbolsInAllFieldsExceptLogin();
+        User user = userGenerator.generateUserWithSpecialSymbolsInAllFields();
         return new Object[]{user};
     }
 
@@ -65,8 +65,12 @@ public class NewUserFormPositiveTests extends BaseTest {
     }
 
 
-    //check that user created with different options:
-    //only mandatory fields, or optional fields 1 by 1, or all optional fields are filled in
+    /* check that users with diferent options are created and user info on users page is correct:
+    case 1: only mandatory fields are filled in (login/password/repeat password)
+    case 2: mandatory fields + 1 optional (full name) are filled in
+    case 3: mandatory fields + 1 optional (email) are filled in
+    case 4: mandatory fields + 1 optional (jabber) are filled in
+    case 5: mandatory fields + all optional (full name/email/jabber) are filled in */
     @Test(dataProvider = "provideUsersWithMandatoryAndOptionalFields")
     public void createNewUser(User user) {
         createUser(user);
@@ -84,8 +88,9 @@ public class NewUserFormPositiveTests extends BaseTest {
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
     }
 
-    /* edge case test:
-    test for special symbols shows that they are allowed in every field except of login
+    /* edge case test: -> GREY AREA - REQUIREMENTS ARE NOT SPECIFIED - TEST FAILS ON USER INFO ASSERTION
+    test for special symbols "!±@#$%^&*()-_=+{}[];:\"'|\\<>,.?/~`"
+    shows that they are allowed in every field (only login doesn't allow "<>/" and space)
     (corresponding negative test for login with special symbols is in negative tests)*/
     @Test(dataProvider = "provideUserWithSpecialSymbols")
     public void createUserWithSpecialSymbols(User user) {
@@ -95,12 +100,14 @@ public class NewUserFormPositiveTests extends BaseTest {
         Assert.assertEquals(userNameFromUserEditPage, user.getFullName(), "user name doesn't match");
         // find created user using search form and check his info in the users list (login, full name, email/jabber)
         app.navigateToUsersPageViaMenu();
-        Assert.assertTrue(app.manageUsersPage.isUserFoundByLogin(user));
-        User createdUserInfo = app.manageUsersPage.getUserInfoForProvidedLogin(user);
+        //extract part of login without special symbols as search with special symbols doesn't work properly
+        String partOfLogin = user.getLogin().substring(0, user.getLogin().indexOf('!'));
+        Assert.assertTrue(app.manageUsersPage.isUserFoundByString(partOfLogin));
+        User createdUserInfo = app.manageUsersPage.getUserInfoBy(partOfLogin);
         Assert.assertEquals(createdUserInfo, user, "user info doesn't match!");
     }
 
-    //edge case: creates user with min fields length (=1 symbol)
+    //edge case: creates user with minimal fields length (=1 symbol) -> GREY AREA, MIN LENGTH IS NOT SPECIFIED AND ACCEPTED AS 1 SYMBOL
     @Test(dataProvider = "provideUsersWithMinFieldsLength")
     public void createUserWithMinFieldsLength(User user) {
         createUser(user);
@@ -127,7 +134,10 @@ public class NewUserFormPositiveTests extends BaseTest {
         }
     }
 
-    //edge case: create user with max allowed login/full name fields (=50 symbols) and more than max (>50)
+    /* edge case: create user with max allowed login/full name fields (=50 symbols) and more than max (>50)
+    GREY AREA, MAX LENGTH IS SPECIFIED ONLY FOR LOGIN ANF FULL NAME AS 50 SYMBOLS, FOR ALL OTHER FIELDS NO LIMITATION
+    case 1: all fields length = 50
+    case 2: all fields length > 50 (but login and full name are auto-truncated till 50 symbols) */
     @Test(dataProvider = "provideUsersWithMaxAndMoreFieldsLength")
     public void createUserWithMaxFieldsLength(User user) {
         int maxFieldLenght = 50;

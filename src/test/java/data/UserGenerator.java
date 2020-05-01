@@ -72,9 +72,11 @@ public class UserGenerator {
     }
 
     //the following special symbols are allowed in all fields except for login: !±@#$%^&*()-_=+{}[];:\"'|\\<>,.?/~`;
-    public User generateUserWithSpecialSymbolsInAllFieldsExceptLogin() {
+    public User generateUserWithSpecialSymbolsInAllFields() {
         String specialSymbolsAddition = "!±@#$%^&*()-_=+{}[];:\"'|\\<>,.?/~`";
+        String specialSymbolsAdditionForLogin = "!±@#$%^&*()-_=+{}[];:\"'|\\,.?~`"; //with exception of <>/
         User user = generateUserWithMandatoryFields();
+        user.setLogin(user.getLogin()+specialSymbolsAdditionForLogin);
         user.setPassword(specialSymbolsAddition);
         user.setRepeatPassword(specialSymbolsAddition);
         user.setFullName(specialSymbolsAddition);
