@@ -109,6 +109,7 @@ public class NewUserFormNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, DIFF_PASSWORDS_MSG, "error message doesn't match!");
     }
 
+    //INCONSISTENT INFO TESTS
     //passwords don't match
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithNotMatchingPasswords(User user) {
@@ -119,6 +120,7 @@ public class NewUserFormNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, DIFF_PASSWORDS_MSG, "error message doesn't match!");
     }
 
+    //RESTRICTED SPECIAL SYMBOLS CASES
     //login name contains space
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createUserWithSpaceInLogin(User user) {
@@ -129,7 +131,10 @@ public class NewUserFormNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, SPACE_IN_LOGIN_MSG, "error message doesn't match!");
     }
 
-    //login name contains restricted characters (<>/)
+    /*login name contains restricted characters (<>/):
+    case 1: login contains ">"
+    case 2: login contains "<"
+    case 3: login contains "/" */
     @Test(dataProvider = "provideUserWithNotAllowedLoginChars")
     public void provideUserWithNotAllowedLoginChars(User user) {
         startNewUserCreation(user);
@@ -138,6 +143,35 @@ public class NewUserFormNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, RESTRICTED_LOGINCHARS_MSG, "error message doesn't match!");
     }
 
+    /* user email/jabber contains space - FAILS!
+    case 1: email with space, e.g. "test name@gmail.com"
+    case 2: jabber with space, e.g. "test name@jabber.com" */
+    @Test(dataProvider = "provideUsersWithSpaceInEmailAndJabber")
+    public void createUserWithSpaceInEmailOrJabber(User user) {
+        //try to create user
+        startNewUserCreation(user);
+        app.newUserForm.submitUserCreation();
+        //check that users with invalid email/jabber  weren't created:
+        app.navigateToUsersPage();
+        Assert.assertFalse(app.manageUsersPage.isUserFoundByLogin(user), "user with space in email or jabber was created!");
+    }
+
+    //WRONG FORMAT CASES
+    /*email/jabber formats should be validated, but they are not, so test expectedly -> FAILS!
+    case 1: email with wrong format != Username@domain.extension, e.g. "345453767testemail"
+    case 2: jabber with wrong format jabber != Username@domain.extension, e.g. "34757476testjabber"
+     */
+    @Test(dataProvider = "provideUsersWithInvalidEmailAndJabberFormat")
+    public void createUserWithWrongEmailOrJabber(User user) {
+        //try to create user
+        startNewUserCreation(user);
+        app.newUserForm.submitUserCreation();
+        //check that users with invalid email/jabber  weren't created:
+        app.navigateToUsersPage();
+        Assert.assertFalse(app.manageUsersPage.isUserFoundByLogin(user), "user with invalid email or jabber format was created!");
+    }
+
+    //DUPLICATED USER INFO CASES
     //duplicated user name (trying to create user with already existing login name)
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createUserDuplicatedByLogin(User user) {
@@ -170,31 +204,6 @@ public class NewUserFormNegativeTests extends BaseTest {
         //check that user with duplicated email wasn't created
         app.navigateToUsersPage();
         Assert.assertFalse(app.manageUsersPage.isUserFoundByLogin(user), "user with duplicated email was created!");
-    }
-
-
-    //email/jabber formats should be validated, but they are not, so test expectedly FAILS!
-    @Test(dataProvider = "provideUsersWithInvalidEmailAndJabberFormat")
-    public void createUserWithWrongEmailOrJabber(User user) {
-        //try to create user
-        startNewUserCreation(user);
-        app.newUserForm.submitUserCreation();
-        //check that users with invalid email/jabber  weren't created:
-        app.navigateToUsersPage();
-        Assert.assertFalse(app.manageUsersPage.isUserFoundByLogin(user), "user with invalid email or jabber was created!");
-    }
-
-    //user email/jabber contains space - FAILS!
-    //case 1: email with space, e.g. "test name@gmail.com"
-    //case 2: jabber with space "test name@jabber.com"
-    @Test(dataProvider = "provideUsersWithSpaceInEmailAndJabber")
-    public void createUserWithSpaceInEmailOrJabber(User user) {
-        //try to create user
-        startNewUserCreation(user);
-        app.newUserForm.submitUserCreation();
-        //check that users with invalid email/jabber  weren't created:
-        app.navigateToUsersPage();
-        Assert.assertFalse(app.manageUsersPage.isUserFoundByLogin(user), "user with space in email or jabber was created!");
     }
 
     private void startNewUserCreation(User user) {
