@@ -61,8 +61,10 @@ public class NewUserFormNegativeTests extends BaseTest {
         return users.stream().map((g) -> new Object[]{g}).collect(Collectors.toList()).iterator();
     }
 
-    //tests for not filled in mandatory fields
 
+
+
+    //EMPTY MANDATORY FIELDS TESTS
     //login name is empty
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createNewUserWithoutLogin(User user) {
@@ -93,6 +95,7 @@ public class NewUserFormNegativeTests extends BaseTest {
         String actualErrorMessage = app.newUserForm.getErrorMessageOnMandatoryFields();
         Assert.assertEquals(actualErrorMessage, DIFF_PASSWORDS_MSG, "error message doesn't match!");
     }
+
 
     //passwords don't match
     @Test(dataProvider = "provideUserWithMandatoryFields")
@@ -148,6 +151,8 @@ public class NewUserFormNegativeTests extends BaseTest {
         app.navigateToUsersPage();
         Assert.assertFalse(app.manageUsersPage.isUserFoundByLogin(user), "user with invalid email or jabber was created!");
     }
+
+    // email/jabber contain space
 
     private void startNewUserCreation(User user) {
         app.navigateToUsersPage();

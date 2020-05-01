@@ -21,7 +21,7 @@ public class UsersPageAccessTests extends BaseTest{
         app.newUserForm.submitUserCreation();
     }
 
-    //not permitted user cannot access "Create Users" page
+    //cheks that not permitted user cannot access "Create Users" page
     @Test
     public void tryToAccessCreatePageWithoutPermission() {
         app.navigateToLoginPage();

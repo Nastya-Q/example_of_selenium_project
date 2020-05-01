@@ -108,14 +108,14 @@ public class UserGenerator {
     //email != Username@domain.extension
     public User generateUserWithInvalidEmailFormat() {
         User user = generateUserWithMandatoryFields();
-        user.setEmail(System.currentTimeMillis() + "test");
+        user.setEmail(System.currentTimeMillis() + "testemail");
         return user;
     }
 
     //jabber != Username@domain.extension
     public User generateUserWithInvalidJabberFormat() {
         User user = generateUserWithMandatoryFields();
-        user.setJabber(System.currentTimeMillis() + "test");
+        user.setJabber(System.currentTimeMillis() + "testjabber");
         return user;
     }
 
