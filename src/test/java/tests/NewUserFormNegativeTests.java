@@ -11,10 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class NewUserFormNegativeTests extends BaseTest {
-    @BeforeClass
-    public void login() {
-        app.loginAsRoot();
-    }
 
     //expected error messages on user creation form
     private final String MISSING_PASSWORD_MSG = "Password is required!";
@@ -23,6 +19,12 @@ public class NewUserFormNegativeTests extends BaseTest {
     private final String DUPLICATE_USERLOGIN_MSG = "Value should be unique: login";
     private final String SPACE_IN_LOGIN_MSG = "Restricted character ' ' in the name";
     private final String RESTRICTED_LOGINCHARS_MSG = "login shouldn't contain characters \"<\", \"/\", \">\": login";
+
+    @BeforeClass
+    public void login() {
+        app.loginAsRoot();
+        app.navigateToUsersPageViaMenu();
+    }
 
     @DataProvider
     public Object[] provideUserWithMandatoryFields() {
@@ -107,10 +109,9 @@ public class NewUserFormNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, DIFF_PASSWORDS_MSG, "error message doesn't match!");
     }
 
-
     //passwords don't match
     @Test(dataProvider = "provideUserWithMandatoryFields")
-    public void createNewUserWithDiffPasswords(User user) {
+    public void createNewUserWithNotMatchingPasswords(User user) {
         user.setRepeatPassword(user.getPassword() + "diff");
         startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
@@ -139,7 +140,7 @@ public class NewUserFormNegativeTests extends BaseTest {
 
     //duplicated user name (trying to create user with already existing login name)
     @Test(dataProvider = "provideUserWithMandatoryFields")
-    public void createDuplicatedUser(User user) {
+    public void createUserDuplicatedByLogin(User user) {
         // create user
         startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
@@ -152,7 +153,24 @@ public class NewUserFormNegativeTests extends BaseTest {
         Assert.assertEquals(actualErrorMessage, DUPLICATE_USERLOGIN_MSG, "error message doesn't match!");
     }
 
-    //todo: duplicated email:
+    //create user with email which already exists by other existing user - FAILS!
+    // (email shouldn't be duplicated as it's user for login functionality)
+    @Test(dataProvider = "provideUserWithMandatoryFields")
+    public void createUserDuplicatedByEmail(User user) {
+        //create user
+        user.setEmail(System.currentTimeMillis() + "name@google.com");
+        startNewUserCreation(user);
+        app.newUserForm.submitUserCreation();
+        String userNameFromUserEditPage = app.editUserPage.getUserName();
+        Assert.assertEquals(userNameFromUserEditPage, user.getLogin(), "user name doesn't match");
+        //try to create user with the same email
+        user.setLogin(user.getLogin() + "new");
+        startNewUserCreation(user);
+        app.newUserForm.submitUserCreation();
+        //check that user with duplicated email wasn't created
+        app.navigateToUsersPage();
+        Assert.assertFalse(app.manageUsersPage.isUserFoundByLogin(user), "user with duplicated email was created!");
+    }
 
 
     //email/jabber formats should be validated, but they are not, so test expectedly FAILS!
@@ -170,7 +188,7 @@ public class NewUserFormNegativeTests extends BaseTest {
     //case 1: email with space, e.g. "test name@gmail.com"
     //case 2: jabber with space "test name@jabber.com"
     @Test(dataProvider = "provideUsersWithSpaceInEmailAndJabber")
-    public void createUserWithSpaceIEmailOrJabber(User user) {
+    public void createUserWithSpaceInEmailOrJabber(User user) {
         //try to create user
         startNewUserCreation(user);
         app.newUserForm.submitUserCreation();
@@ -178,7 +196,6 @@ public class NewUserFormNegativeTests extends BaseTest {
         app.navigateToUsersPage();
         Assert.assertFalse(app.manageUsersPage.isUserFoundByLogin(user), "user with space in email or jabber was created!");
     }
-
 
     private void startNewUserCreation(User user) {
         app.navigateToUsersPage();
