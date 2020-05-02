@@ -33,11 +33,12 @@ if browser/properties are not defined, then Google Chrome and local properties w
 2. Failed tests screenshots are saved in 
 `projectdirectory/src/failed_test_screenshots`
 
-**SOME NOTES ABOUT YOUTRACK APPLICATION**
-1. When user is created, some special symbols and uniqueness are only checked for login field
-2. So, special symbols are allowed in all other fields (password, email, jabber, full name) -> `see one of positive tests with evidence`
+**SOME NOTES ABOUT YOUTRACK APPLICATION (FOUND ISSUES DURING TESTS WRITING):**
+1. Almost no validation on special symbols for all fields
+2. Almost no validation for min/max length for all fields (except login/full name, which are limited by 50 symbols)
+3. There is no check for email/jabber  format, they can be any non-valid
 3. Email can be duplicated (so, during new user creation, email from already existing user can be used).
- Making accent on email as it can be used for user login. -> `no tests was added for duplicated email, 
- as I checked that user can successfully login with duplicated email`
-4. there is no special check for email/jabber  format -> `no tests was added for this as well, as there is no app requirement for format`
+
+**DETAILED TEST DESCRIPTION CAN BE SEEN AT PROJECT DIR:**
+/jbtesttask/Test_cases_description.docx
  
