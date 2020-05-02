@@ -39,6 +39,6 @@ if browser/properties are not defined, then Google Chrome and local properties w
 3. There is no check for email/jabber  format, they can be any non-valid
 3. Email can be duplicated (so, during new user creation, email from already existing user can be used).
 
-**DETAILED TEST DESCRIPTION CAN BE SEEN AT PROJECT DIR:**
+**TEST CASES DESCRIPTION CAN BE FOUND AT PROJECT DIR:**
 /jbtesttask/Test_cases_description.docx
  
