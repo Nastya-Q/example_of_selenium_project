@@ -13,7 +13,7 @@ public class NewUserLoginNegativeTests extends BaseTest {
     private User createdUser;
 
     @BeforeClass
-    public void createUserWithoutPermissions() {
+    public void createUser() {
         UserGenerator userGenerator = new UserGenerator();
         createdUser = userGenerator.generateUserWithAllOptionalFields();
         app.loginAsRoot();

@@ -188,7 +188,7 @@ public class NewUserFormNegativeTests extends BaseTest {
     }
 
     //create user with email which already exists by other existing user - FAILS!
-    // (email shouldn't be duplicated as it's user for login functionality)
+    // (email shouldn't be duplicated as it's used for login functionality)
     @Test(dataProvider = "provideUserWithMandatoryFields")
     public void createUserDuplicatedByEmail(User user) {
         //create user

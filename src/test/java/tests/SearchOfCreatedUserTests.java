@@ -24,7 +24,7 @@ public class SearchOfCreatedUserTests extends BaseTest {
     }
 
     //SEARCH CASES BY WHOLE LOGIN, EMAIL, FULL NAME
-    //checks that created user can be found by login name and it's info matches with created user
+    //checks that created user can be found by login name and his info matches with created user
     @Test
     public void findCreatedUserByWholeLogin() {
         app.navigateToUsersPage();
@@ -33,7 +33,7 @@ public class SearchOfCreatedUserTests extends BaseTest {
         Assert.assertEquals(userInfoFromPage, createdUser, "user info doesn't match!");
     }
 
-    //checks that created user can be found by email and it's info matches with created user
+    //checks that created user can be found by email and his info matches with created user
     @Test
     public void findCreatedUserByWholeEmail() {
         app.navigateToUsersPage();
@@ -42,7 +42,7 @@ public class SearchOfCreatedUserTests extends BaseTest {
         Assert.assertEquals(userInfoFromPage, createdUser, "user info doesn't match!");
     }
 
-    //checks that created user can be found by full name and it's info matches with created user
+    //checks that created user can be found by full name and his info matches with created user
     @Test
     public void findCreatedUserByWholeFullName() {
         app.navigateToUsersPage();
@@ -74,7 +74,6 @@ public class SearchOfCreatedUserTests extends BaseTest {
         Assert.assertEquals(userInfoFromPage, createdUser, "user info doesn't match!");
     }
 
-
     //search by partial email (from begin till @)
     @Test
     public void findCreatedUserByPartEmailBegin() {
@@ -86,7 +85,7 @@ public class SearchOfCreatedUserTests extends BaseTest {
         Assert.assertEquals(userInfoFromPage, createdUser, "user info doesn't match!");
     }
 
-    //search by partial email (from the middle) FAILS!
+    //search by partial email (from the middle) - FAILS!
     @Test
     public void findCreatedUserByPartEmailEnd() {
         app.navigateToUsersPage();
@@ -109,7 +108,8 @@ public class SearchOfCreatedUserTests extends BaseTest {
             Assert.assertEquals(userInfoFromPage, createdUser, "user info doesn't match!");
         }
     }
-    //search by partial full name from part not splitted by space FAILS!
+
+    //search by partial full name for part not splitted by space - FAILS!
     @Test
     public void findCreatedUserByPartFullName() {
         app.navigateToUsersPage();
