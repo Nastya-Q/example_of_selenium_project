@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 public class ApplicationManager {
     private WebDriver driver;
@@ -42,6 +43,7 @@ public class ApplicationManager {
         } else if (browser.equals(BrowserType.CHROME)) {
             driver = new ChromeDriver();
         }
+//        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         wait = new WebDriverWait(driver, 10);
         loginPage = new LoginPage(driver, wait);
         manageUsersPage = new ManageUsersPage(driver, wait);
