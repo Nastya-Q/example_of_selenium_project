@@ -31,7 +31,7 @@ public class NewUserLoginPositiveTests extends BaseTest {
         app.topMenu.openDashboard(); //to not stay on user edit page
         app.logout();
         app.loginPage.login(user.getLogin(), user.getPassword());
-        Assert.assertEquals(user.getFullName(), app.topMenu.getUserNameFromMenuPanel(), "user name doesn't match");
+        Assert.assertEquals(app.topMenu.getUserNameFromMenuPanel(), user.getFullName(), "user name doesn't match");
     }
 
     //checks that created user can login by email
@@ -43,7 +43,7 @@ public class NewUserLoginPositiveTests extends BaseTest {
         app.topMenu.openDashboard(); //to not stay on user edit page
         app.logout();
         app.loginPage.login(user.getEmail(), user.getPassword());
-        Assert.assertEquals(user.getFullName(), app.topMenu.getUserNameFromMenuPanel(), "user name doesn't match");
+        Assert.assertEquals(app.topMenu.getUserNameFromMenuPanel(), user.getFullName(), "user name doesn't match");
     }
 
     //checks that created user is forced to change password if this checkbox was enabled on user creation form
@@ -55,7 +55,7 @@ public class NewUserLoginPositiveTests extends BaseTest {
         app.topMenu.openDashboard(); //to not stay on user edit page
         app.logout();
         app.loginPage.login(user.getLogin(), user.getPassword());
-        Assert.assertEquals(CHANGE_PASSWORD_MSG, app.userProfilePage.getPopupNotificationText(), "change password message is not shown");
+        Assert.assertEquals(app.userProfilePage.getPopupNotificationText(), CHANGE_PASSWORD_MSG,"change password message is not shown");
         Assert.assertTrue(app.userProfilePage.isPwdChangeDialogShown());
     }
 

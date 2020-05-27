@@ -28,7 +28,7 @@ public class UsersPageAccessTests extends BaseTest {
         app.navigateToLoginPage();
         app.loginPage.login(nonAdminUser.getLogin(), nonAdminUser.getPassword());
         app.navigateToUsersPage();
-        Assert.assertEquals(NO_PAGE_PERMISSION_MSG, app.commonElements.getErrorPageMessage());
+        Assert.assertEquals(app.commonElements.getErrorPageMessage(), NO_PAGE_PERMISSION_MSG, "wrong error message!");
     }
 
     @AfterClass

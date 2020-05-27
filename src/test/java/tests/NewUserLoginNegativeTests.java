@@ -29,7 +29,7 @@ public class NewUserLoginNegativeTests extends BaseTest {
         app.navigateToLoginPage();
         createdUser.setPassword(createdUser.getPassword() + "wrongpassword");
         app.loginPage.login(createdUser.getLogin(), createdUser.getPassword());
-        Assert.assertEquals(WRONG_LOGINDATA_MSG, app.loginPage.getLoginErrorHint());
+        Assert.assertEquals(app.loginPage.getLoginErrorHint(), WRONG_LOGINDATA_MSG, "wrong error message!");
     }
 
     //checks that created user cannot login with correct email and wrong password
@@ -38,7 +38,7 @@ public class NewUserLoginNegativeTests extends BaseTest {
         app.navigateToLoginPage();
         createdUser.setPassword(createdUser.getPassword() + "wrongpassword");
         app.loginPage.login(createdUser.getEmail(), createdUser.getPassword());
-        Assert.assertEquals(WRONG_LOGINDATA_MSG, app.loginPage.getLoginErrorHint());
+        Assert.assertEquals(app.loginPage.getLoginErrorHint(), WRONG_LOGINDATA_MSG, "wrong error message!");
     }
 
     @AfterClass
